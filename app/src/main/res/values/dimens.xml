@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Text-->
+    <dimen name="big_text">26sp</dimen>
+    <dimen name="normal_text">19sp</dimen>
+    <!--Paddings-->
+    <dimen name="main_padding">16dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <!--Buttons-->
+    <dimen name="button_corner_radius">16dp</dimen>
+    <dimen name="icon_size">26dp</dimen>
+    <!--Margin-->
+    <dimen name="normal_margin">16dp</dimen>
+    <dimen name="big_margin">24dp</dimen>
+</resources>
