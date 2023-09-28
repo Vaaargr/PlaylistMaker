@@ -1,26 +1,41 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <attr name="main_activity_title_text" />
+    <attr name="main_activity_background" />
+    <attr name="main_activity_button_background" />
+    <attr name="main_activity_button_text" />
+    <attr name="main_activity_icon_tint" />
+
+    <attr name="over_activity_background" />
+
+    <attr name="settings_activity_button_background" />
+    <attr name="settings_activity_button_text" />
+    <attr name="settings_activity_icon_tint" />
+    <attr name="settings_activity_switch_on" />
+
+    <attr name="search_activity_edit_text_background"/>
+    <attr name="search_activity_edit_text_hint_font_color"/>
+    <attr name="search_activity_edit_text_font_color"/>
+
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
-    </style>
 
-    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
-    </style>
+        <item name="main_activity_background">@color/blue</item>
+        <item name="main_activity_button_background">@color/white</item>
+        <item name="main_activity_button_text">@color/black</item>
+        <item name="main_activity_icon_tint">@color/black</item>
+        <item name="main_activity_title_text">@color/white</item>
 
-    <style name="ToolbarTextAppearance">
-        <item name="android:fontFamily">@font/ys_display</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:background">@color/white</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    
-    <style name="ToolbarTextAppearance.Title">
-        <item name="android:textSize">@dimen/big_text</item>
-    </style>
+        <item name="over_activity_background">@color/white</item>
 
-    <style name="MySwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/green</item>
-        <item name="colorSwitchThumbNormal">@color/gray</item>
-    </style>
+        <item name="settings_activity_button_background">@color/white</item>
+        <item name="settings_activity_button_text">@color/black</item>
+        <item name="settings_activity_icon_tint">@color/gray</item>
+        <item name="settings_activity_switch_on">@color/green</item>
 
+        <item name="search_activity_edit_text_background">@color/light_gray</item>
+        <item name="search_activity_edit_text_hint_font_color">@color/dark_gray</item>
+        <item name="search_activity_edit_text_font_color">@color/black</item>
+    </style>
 </resources>
+

@@ -9,4 +9,9 @@
     <string name="share_app">Share app</string>
     <string name="write_to_support">Write to support</string>
     <string name="terms_of_use">Terms of use</string>
+    <string name="share_address" translatable="false">https://practicum.yandex.ru/android-developer/</string>
+    <string name="term_address" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="user_mail" translatable="false">mailto:sapegin.varg@yandex.ru</string>
+    <string name="message_subject">Message to the developers of Playlist Maker app</string>
+    <string name="message_body">Thanks to the developers for the cool app!</string>
 </resources>
