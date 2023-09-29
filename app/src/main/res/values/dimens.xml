@@ -6,11 +6,15 @@
     <!--Paddings-->
     <dimen name="main_padding">16dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
+    <dimen name="normal_padding">12dp</dimen>
+    <dimen name="big_padding">14dp</dimen>
+    <dimen name="very_big_padding">36dp</dimen>
     <!--Buttons-->
     <dimen name="button_corner_radius">16dp</dimen>
     <dimen name="icon_size">26dp</dimen>
     <!--Margin-->
-    <dimen name="normal_margin">8dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="normal_margin">16dp</dimen>
     <dimen name="big_margin">24dp</dimen>
 
     <dimen name="elevation">18dp</dimen>

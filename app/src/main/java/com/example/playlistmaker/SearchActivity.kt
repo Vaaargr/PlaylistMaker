@@ -11,8 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
-    lateinit var binding: ActivitySearchBinding
-    var savedText = ""
+    private lateinit var binding: ActivitySearchBinding
+    private var savedText = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
@@ -22,6 +22,7 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            setHomeAsUpIndicator(R.drawable.toolbar_back_arrow)
         }
 
         binding.clearButton.setOnClickListener {
