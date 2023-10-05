@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/over_activity_background"
     android:orientation="vertical"
-    tools:context=".SearchActivity"
+    tools:context=".activitys.SearchActivity"
     >
 
     <androidx.appcompat.widget.Toolbar
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/search_icon_a"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/big_padding"/>
+            android:layout_marginStart="@dimen/big_padding"/>
 
         <EditText
             android:id="@+id/editText"
@@ -61,5 +61,15 @@
             android:paddingStart="@dimen/normal_padding"
             android:visibility="gone" />
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/big_margin"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:background="@color/none"
+        />
 
 </LinearLayout>

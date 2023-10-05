@@ -1,7 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activitys
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.playlistmaker.R
 
 class MusicLibraryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

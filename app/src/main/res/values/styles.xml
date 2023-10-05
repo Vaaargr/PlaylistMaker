@@ -56,4 +56,23 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/big_text</item>
     </style>
+
+    <style name="TrackNameText">
+        <item name="android:layout_marginStart">@dimen/small_margin</item>
+        <item name="android:layout_marginEnd">@dimen/small_margin</item>
+        <item name="android:layout_marginTop">@dimen/very_small_margin</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/medium_text</item>
+        <item name="android:textColor">?attr/settings_activity_button_text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TrackAnotherText">
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:textColor">?attr/search_activity_another_text_color</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

@@ -16,6 +16,9 @@
     <attr name="search_activity_edit_text_background"/>
     <attr name="search_activity_edit_text_hint_font_color"/>
     <attr name="search_activity_edit_text_font_color"/>
+    <attr name="search_activity_another_text_color"/>
+
+
 
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
@@ -36,6 +39,7 @@
         <item name="search_activity_edit_text_background">@color/light_gray</item>
         <item name="search_activity_edit_text_hint_font_color">@color/dark_gray</item>
         <item name="search_activity_edit_text_font_color">@color/black</item>
+        <item name="search_activity_another_text_color">@color/gray</item>
     </style>
 </resources>
 

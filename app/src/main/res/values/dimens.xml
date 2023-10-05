@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Text-->
-    <dimen name="big_text">22sp</dimen>
+    <dimen name="small_text">11sp</dimen>
+    <dimen name="medium_text">16sp</dimen>
     <dimen name="normal_text">19sp</dimen>
+    <dimen name="big_text">22sp</dimen>
     <!--Paddings-->
     <dimen name="main_padding">16dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
@@ -13,10 +15,14 @@
     <dimen name="button_corner_radius">16dp</dimen>
     <dimen name="icon_size">26dp</dimen>
     <!--Margin-->
+    <dimen name="very_very_small_margin">4dp</dimen>
+    <dimen name="very_small_margin">6dp</dimen>
     <dimen name="small_margin">8dp</dimen>
+    <dimen name="medium_margin">12dp</dimen>
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="big_margin">24dp</dimen>
 
     <dimen name="elevation">18dp</dimen>
     <dimen name="small_corner">8dp</dimen>
+    <dimen name="search_image_size">45dp</dimen>
 </resources>
