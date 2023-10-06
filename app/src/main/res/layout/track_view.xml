@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/very_very_small_margin"
-    android:layout_marginBottom="@dimen/very_very_small_margin"
+    android:layout_marginTop="@dimen/margin_8"
+    android:layout_marginBottom="@dimen/margin_8"
     android:background="@color/none">
 
 
@@ -25,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/arrow_forward_icon"
+        app:srcCompat="@drawable/arrow_forward_track_view"
         app:tint="?attr/search_activity_another_text_color" />
 
     <TextView
