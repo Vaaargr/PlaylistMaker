@@ -14,6 +14,7 @@
     <!--Buttons-->
     <dimen name="button_corner_radius">16dp</dimen>
     <dimen name="icon_size">26dp</dimen>
+    <dimen name="button_corner_radius_big">54dp</dimen>
     <!--Margin-->
     <dimen name="margin_4">4dp</dimen>
     <dimen name="margin_6">6dp</dimen>
@@ -25,4 +26,7 @@
     <dimen name="elevation">18dp</dimen>
     <dimen name="small_corner">8dp</dimen>
     <dimen name="search_image_size">45dp</dimen>
+    
+    <dimen name="error_image_top">102dp</dimen>
+    <dimen name="error_text_top">16dp</dimen>
 </resources>

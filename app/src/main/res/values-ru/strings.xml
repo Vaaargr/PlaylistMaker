@@ -11,4 +11,7 @@
     <string name="terms_of_use">Пользовательское соглашение</string>
     <string name="message_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="empty_search">Ничего не нашлось</string>
+    <string name="internet_error">Проблемы со связью.\n\nЗагрузка не удалась. Проверьте подключение к интернету.</string>
+    <string name="update">Обновить</string>
 </resources>

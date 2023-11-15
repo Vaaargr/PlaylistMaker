@@ -11,9 +11,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class SearchRecyclerAdapter(private val tracks: List<Track>) :
+class SearchRecyclerAdapter :
     RecyclerView.Adapter<SearchRecyclerAdapter.TrackViewHolder>() {
+    private val tracks = ArrayList<Track>()
+
+    fun add(inputTracks: List<Track>) {
+        tracks.addAll(inputTracks)
+        notifyDataSetChanged()
+    }
+
+    fun clearList() {
+        tracks.clear()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
@@ -37,7 +50,8 @@ class SearchRecyclerAdapter(private val tracks: List<Track>) :
         fun bind(track: Track) {
             trackNameView.text = track.trackName
             artistNameView.text = track.artistName
-            trackTimeView.text = track.trackTime
+            trackTimeView.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
             Glide.with(itemView.context)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)
