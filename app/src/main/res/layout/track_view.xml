@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_8"
     android:layout_marginBottom="@dimen/margin_8"
-    android:background="@color/none">
+    android:background="@color/none"
+    android:clickable="true"
+    >
 
 
     <ImageView

@@ -7,16 +7,21 @@ import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.Constants
+import com.example.playlistmaker.enums.Constants
 import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.adapters.SearchRecyclerAdapter
 import com.example.playlistmaker.api.ITunesSearchApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.enums.SearchResponseVariants
 import com.example.playlistmaker.models.ITunesResponse
+import com.example.playlistmaker.models.Track
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,20 +29,34 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickListener {
     private lateinit var binding: ActivitySearchBinding
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var responseAdapter: SearchRecyclerAdapter
+    private lateinit var historyAdapter: SearchRecyclerAdapter
+
     private var savedText = ""
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesService = retrofit.create(ITunesSearchApi::class.java)
-    private val adapter = SearchRecyclerAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        searchHistory = SearchHistory(
+            getSharedPreferences(
+                Constants.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
+                MODE_PRIVATE
+            )
+        )
+
+        responseAdapter = SearchRecyclerAdapter( this)
+        historyAdapter = SearchRecyclerAdapter( this)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
@@ -47,18 +66,19 @@ class SearchActivity : AppCompatActivity() {
         }
 
         with(binding) {
+            searchRecycler.layoutManager = LinearLayoutManager(this@SearchActivity)
+
             clearButton.setOnClickListener {
                 queryInput.setText("")
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(queryInput.windowToken, 0)
                 queryInput.clearFocus()
-                adapter.clearList()
-                hideEmptySearch()
-                hideInternetError()
+                responseAdapter.clearList()
+                showResult(SearchResponseVariants.GOOD_RESPONSE)
             }
 
             updateButton.setOnClickListener {
-                makeQuery()
+                search()
             }
 
             queryInput.addTextChangedListener(object : TextWatcher {
@@ -73,19 +93,39 @@ class SearchActivity : AppCompatActivity() {
                 override fun afterTextChanged(s: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     savedText = s.toString()
-                    binding.clearButton.visibility =
-                        if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                    binding.clearButton.isVisible = !s.isNullOrEmpty()
+                    setSearchHistoryVisibility(false)
+                    searchRecycler.adapter = responseAdapter
                 }
             })
 
-            searchRecycler.layoutManager = LinearLayoutManager(this@SearchActivity)
-            searchRecycler.adapter = adapter
+            queryInput.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    val history = searchHistory.getHistory()
+                    if (history.isNotEmpty()) {
+                        searchRecycler.adapter = historyAdapter
+                        historyAdapter.add(history)
+                        setSearchHistoryVisibility(true)
+                    } else {
+                        setSearchHistoryVisibility(false)
+                    }
+                } else {
+                    setSearchHistoryVisibility(false)
+                }
+            }
 
-            queryInput.setOnEditorActionListener { v, actionId, event ->
+            queryInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                   makeQuery()
+                    historyAdapter.clearList()
+                    search()
                 }
                 false
+            }
+
+            clearSearchHistoryButton.setOnClickListener {
+                historyAdapter.clearList()
+                searchHistory.clearHistory()
+                setSearchHistoryVisibility(false)
             }
         }
     }
@@ -98,17 +138,19 @@ class SearchActivity : AppCompatActivity() {
             ) {
                 if (response.code() == 200) {
                     if (response.body()?.results?.isNotEmpty() == true) {
-                        adapter.add(response.body()!!.results)
-                    } else{
-                        showEmptySearch()
+                        binding.searchRecycler.adapter = responseAdapter
+                        responseAdapter.add(response.body()!!.results)
+                        showResult(SearchResponseVariants.GOOD_RESPONSE)
+                    } else {
+                        showResult(SearchResponseVariants.EMPTY_RESPONSE)
                     }
                 } else {
-                    showInternetError()
+                    showResult(SearchResponseVariants.RESPONSE_ERROR)
                 }
             }
 
             override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                showInternetError()
+                showResult(SearchResponseVariants.RESPONSE_ERROR)
             }
         })
     }
@@ -134,43 +176,65 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeQuery(){
-        hideEmptySearch()
-        hideInternetError()
-        search()
-    }
+    private fun showResult(result: SearchResponseVariants) {
+        with(binding) {
+            when (result.code) {
+                SearchResponseVariants.GOOD_RESPONSE.code -> {
+                    setErrorsVisibility(
+                        searchRecyclerVisibility = true,
+                        errorImageVisibility = false,
+                        errorTextVisibility = false,
+                        updateButtonVisibility = false
+                    )
+                }
 
-    private fun showEmptySearch(){
-        with(binding){
-            searchRecycler.visibility = View.GONE
-            emptySearchImage.visibility = View.VISIBLE
-            emptySearchText.visibility = View.VISIBLE
+                SearchResponseVariants.EMPTY_RESPONSE.code -> {
+                    errorText.text = getString(R.string.empty_search)
+                    errorImage.setImageResource(R.drawable.empty_search)
+                    setErrorsVisibility(
+                        searchRecyclerVisibility = false,
+                        errorImageVisibility = true,
+                        errorTextVisibility = true,
+                        updateButtonVisibility = false
+                    )
+                }
+
+                SearchResponseVariants.RESPONSE_ERROR.code -> {
+                    errorText.text = getString(R.string.internet_error)
+                    errorImage.setImageResource(R.drawable.internet_error)
+                    setErrorsVisibility(
+                        searchRecyclerVisibility = false,
+                        errorImageVisibility = true,
+                        errorTextVisibility = true,
+                        updateButtonVisibility = true
+                    )
+                }
+            }
         }
     }
 
-    private fun hideEmptySearch(){
-        with(binding){
-            searchRecycler.visibility = View.VISIBLE
-            emptySearchText.visibility = View.GONE
-            emptySearchImage.visibility = View.GONE
+    private fun setErrorsVisibility(
+        searchRecyclerVisibility: Boolean,
+        errorImageVisibility: Boolean,
+        errorTextVisibility: Boolean,
+        updateButtonVisibility: Boolean
+    ) {
+        with(binding) {
+            searchRecycler.isVisible = searchRecyclerVisibility
+            errorImage.isVisible = errorImageVisibility
+            errorText.isVisible = errorTextVisibility
+            updateButton.isVisible = updateButtonVisibility
         }
     }
 
-    private fun showInternetError(){
-        with(binding){
-            searchRecycler.visibility = View.GONE
-            internetErrorImage.visibility = View.VISIBLE
-            internetErrorText.visibility = View.VISIBLE
-            updateButton.visibility = View.VISIBLE
+    private fun setSearchHistoryVisibility(input: Boolean) {
+        with(binding) {
+            searchHistoryText.isVisible = input
+            clearSearchHistoryButton.isVisible = input
         }
     }
 
-    private fun hideInternetError(){
-        with(binding){
-            searchRecycler.visibility = View.VISIBLE
-            internetErrorImage.visibility = View.GONE
-            internetErrorText.visibility = View.GONE
-            updateButton.visibility = View.GONE
-        }
+    override fun onClick(track: Track) {
+        searchHistory.saveTrack(track)
     }
 }
