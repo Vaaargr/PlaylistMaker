@@ -2,6 +2,7 @@ package com.example.playlistmaker.models
 
 import java.io.Serializable
 
+
 data class Track(
     val trackName: String,
     val artistName: String,
@@ -12,7 +13,11 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String
-){
+) : Serializable {
+    fun getBigAlbumImage(): String? {
+        return artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

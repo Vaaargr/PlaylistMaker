@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.ThemeDictionary
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -18,7 +18,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        shPref = getSharedPreferences(Constants.SHARED_PREFS_SETTINGS_NAME.value, MODE_PRIVATE)
+        shPref = getSharedPreferences(ThemeDictionary.SHARED_PREFS_SETTINGS_NAME.value, MODE_PRIVATE)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
@@ -28,9 +28,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         with(binding) {
-            darkThemeSwitch.isChecked = shPref.getBoolean(Constants.THEME_MODE.value, false)
+            darkThemeSwitch.isChecked = shPref.getBoolean(ThemeDictionary.THEME_MODE.value, false)
             darkThemeSwitch.setOnCheckedChangeListener { _, isChecked ->
-                shPref.edit().putBoolean(Constants.THEME_MODE.value, isChecked).apply()
+                shPref.edit().putBoolean(ThemeDictionary.THEME_MODE.value, isChecked).apply()
             }
 
             shareAppButton.setOnClickListener {

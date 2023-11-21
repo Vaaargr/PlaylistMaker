@@ -8,9 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.ConstantsKey
 import com.example.playlistmaker.models.Track
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -31,13 +30,12 @@ class AudioPlayerActivity : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.toolbar_back_arrow)
         }
 
-        val track = Gson().fromJson(intent.getStringExtra(Constants.TRACK.value), Track::class.java)
-        val bigAlbumImage = track.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
+        val track = intent.getSerializableExtra(ConstantsKey.TRACK.value) as Track
 
         Glide.with(this@AudioPlayerActivity)
-            .load(bigAlbumImage)
+            .load(track.getBigAlbumImage())
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(8))
             .into(binding.albumImage)
 
         with(binding) {

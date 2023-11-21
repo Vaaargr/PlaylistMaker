@@ -126,48 +126,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_30"
+        app:layout_constraintVertical_chainStyle="spread"
         android:text="@string/duration"
         style="@style/AudioPlayerLeftTextStyle"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintBottom_toTopOf="@id/album_text"/>
 
     <TextView
         android:id="@+id/album_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_17"
         android:text="@string/album"
         style="@style/AudioPlayerLeftTextStyle"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/duration_text" />
+        app:layout_constraintTop_toBottomOf="@+id/duration_text"
+        app:layout_constraintBottom_toTopOf="@id/year_text"/>
 
     <TextView
         android:id="@+id/year_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_17"
         android:text="@string/year"
         style="@style/AudioPlayerLeftTextStyle"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/album_text" />
+        app:layout_constraintTop_toBottomOf="@+id/album_text"
+        app:layout_constraintBottom_toTopOf="@id/genre_text"/>
 
     <TextView
         android:id="@+id/genre_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_17"
         android:text="@string/genre"
         style="@style/AudioPlayerLeftTextStyle"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/year_text" />
+        app:layout_constraintTop_toBottomOf="@+id/year_text"
+        app:layout_constraintBottom_toTopOf="@id/country_text"/>
 
     <TextView
         android:id="@+id/country_text"
+        style="@style/AudioPlayerLeftTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_17"
         android:text="@string/country"
-        style="@style/AudioPlayerLeftTextStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
         app:layout_constraintTop_toBottomOf="@+id/genre_text" />
 

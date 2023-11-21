@@ -7,23 +7,20 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.ConstantsKey
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.adapters.SearchRecyclerAdapter
 import com.example.playlistmaker.api.ITunesSearchApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.enums.HistoryDictionary
 import com.example.playlistmaker.enums.SearchResponseVariants
 import com.example.playlistmaker.models.ITunesResponse
 import com.example.playlistmaker.models.Track
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,7 +49,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
 
         searchHistory = SearchHistory(
             getSharedPreferences(
-                Constants.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
+                HistoryDictionary.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
                 MODE_PRIVATE
             )
         )
@@ -161,7 +158,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString(
-                Constants.SEARCH_ACTIVITY_EDIT_TEXT.value,
+                ConstantsKey.SEARCH_ACTIVITY_EDIT_TEXT.value,
                 ""
             )
         }
@@ -171,7 +168,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (savedText.isNotEmpty()) {
-            outState.putString(Constants.SEARCH_ACTIVITY_EDIT_TEXT.value, savedText)
+            outState.putString(ConstantsKey.SEARCH_ACTIVITY_EDIT_TEXT.value, savedText)
         }
     }
 
@@ -241,7 +238,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     override fun onClick(track: Track) {
         searchHistory.saveTrack(track)
         val intent = Intent(this,AudioPlayerActivity::class.java)
-        intent.putExtra(Constants.TRACK.value, Gson().toJson(track))
+        intent.putExtra(ConstantsKey.TRACK.value, track)
         startActivity(intent)
     }
 }

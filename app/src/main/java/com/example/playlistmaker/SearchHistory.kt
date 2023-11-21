@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.HistoryDictionary
 import com.example.playlistmaker.models.ITunesResponse
 import com.example.playlistmaker.models.Track
 import com.google.gson.Gson
@@ -9,7 +9,7 @@ import com.google.gson.Gson
 class SearchHistory(private val sharedPrefs: SharedPreferences) {
     fun getHistory(): ArrayList<Track> {
         val json =
-            sharedPrefs.getString(Constants.SEARCH_HISTORY.value, null) ?: return ArrayList<Track>()
+            sharedPrefs.getString(HistoryDictionary.SEARCH_HISTORY.value, null) ?: return ArrayList<Track>()
         return Gson().fromJson(json, ITunesResponse::class.java).results
     }
 
@@ -33,12 +33,12 @@ class SearchHistory(private val sharedPrefs: SharedPreferences) {
     }
 
     fun clearHistory() {
-        sharedPrefs.edit().remove(Constants.SEARCH_HISTORY.value).apply()
+        sharedPrefs.edit().remove(HistoryDictionary.SEARCH_HISTORY.value).apply()
     }
 
     private fun saveHistory(inputHistory: ArrayList<Track>) {
         sharedPrefs.edit()
-            .putString(Constants.SEARCH_HISTORY.value, Gson().toJson(ITunesResponse(inputHistory)))
+            .putString(HistoryDictionary.SEARCH_HISTORY.value, Gson().toJson(ITunesResponse(inputHistory)))
             .apply()
     }
 }
