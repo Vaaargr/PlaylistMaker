@@ -13,18 +13,22 @@
     <attr name="settings_activity_icon_tint" />
     <attr name="settings_activity_switch_on" />
 
-    <attr name="search_activity_edit_text_background"/>
-    <attr name="search_activity_edit_text_hint_font_color"/>
-    <attr name="search_activity_edit_text_font_color"/>
-    <attr name="search_activity_another_text_color"/>
-    <attr name="search_activity_secondary_text_color"/>
-    <attr name="search_activity_secondary_buttons_background"/>
-    <attr name="search_activity_secondary_buttons_text_color"/>
+    <attr name="search_activity_edit_text_background" />
+    <attr name="search_activity_edit_text_hint_font_color" />
+    <attr name="search_activity_edit_text_font_color" />
+    <attr name="search_activity_another_text_color" />
+    <attr name="search_activity_secondary_text_color" />
+    <attr name="search_activity_secondary_buttons_background" />
+    <attr name="search_activity_secondary_buttons_text_color" />
 
+    <attr name="audio_player_main_text_color" />
+    <attr name="audio_player_secondary_text_color" />
 
 
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
+        <item name="windowNoTitle">true</item>
+
 
         <item name="main_activity_background">@color/blue</item>
         <item name="main_activity_button_background">@color/white</item>
@@ -46,6 +50,9 @@
         <item name="search_activity_secondary_text_color">@color/black</item>
         <item name="search_activity_secondary_buttons_background">@color/black</item>
         <item name="search_activity_secondary_buttons_text_color">@color/white</item>
+
+        <item name="audio_player_main_text_color">@color/black</item>
+        <item name="audio_player_secondary_text_color">@color/gray</item>
     </style>
 </resources>
 
