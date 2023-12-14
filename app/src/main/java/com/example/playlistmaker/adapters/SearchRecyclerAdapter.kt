@@ -13,7 +13,7 @@ import com.example.playlistmaker.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SearchRecyclerAdapter(val listener: TrackClickListener) :
+class SearchRecyclerAdapter(private val listener: TrackClickListener, private val roundingRadius: Int) :
     RecyclerView.Adapter<SearchRecyclerAdapter.TrackViewHolder>() {
     private val tracks = ArrayList<Track>()
 
@@ -29,7 +29,7 @@ class SearchRecyclerAdapter(val listener: TrackClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
-        return TrackViewHolder(view)
+        return TrackViewHolder(view, roundingRadius)
     }
 
     override fun getItemCount(): Int {
@@ -43,7 +43,7 @@ class SearchRecyclerAdapter(val listener: TrackClickListener) :
         }
     }
 
-    class TrackViewHolder(private val item: View) : ViewHolder(item) {
+    class TrackViewHolder(private val item: View, private val roundingRadius: Int) : ViewHolder(item) {
         private val binding = TrackViewBinding.bind(item)
 
         fun bind(track: Track) {
@@ -55,7 +55,7 @@ class SearchRecyclerAdapter(val listener: TrackClickListener) :
                 Glide.with(itemView.context)
                     .load(track.artworkUrl100)
                     .placeholder(R.drawable.placeholder)
-                    .transform(RoundedCorners(2))
+                    .transform(RoundedCorners(roundingRadius))
                     .into(binding.albumImage)
             }
         }

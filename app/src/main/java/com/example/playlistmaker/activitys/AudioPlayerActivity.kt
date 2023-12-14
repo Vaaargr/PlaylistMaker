@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.Tools
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.enums.ConstantsKey
 import com.example.playlistmaker.models.Track
@@ -31,11 +32,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         val track = intent.getSerializableExtra(ConstantsKey.TRACK.value) as Track
+        val roundingRadius = Tools().dpToPx(8F, this)
 
         Glide.with(this@AudioPlayerActivity)
             .load(track.getBigAlbumImage())
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(8))
+            .transform(RoundedCorners(roundingRadius))
             .into(binding.albumImage)
 
         with(binding) {

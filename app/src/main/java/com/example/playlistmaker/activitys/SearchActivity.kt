@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.enums.ConstantsKey
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.Tools
 import com.example.playlistmaker.adapters.SearchRecyclerAdapter
 import com.example.playlistmaker.api.ITunesSearchApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
@@ -47,6 +48,8 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val roundingRadius = Tools().dpToPx(2F, this)
+
         searchHistory = SearchHistory(
             getSharedPreferences(
                 HistoryDictionary.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
@@ -54,8 +57,8 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
             )
         )
 
-        responseAdapter = SearchRecyclerAdapter(this)
-        historyAdapter = SearchRecyclerAdapter(this)
+        responseAdapter = SearchRecyclerAdapter(this, roundingRadius)
+        historyAdapter = SearchRecyclerAdapter(this, roundingRadius)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
@@ -237,7 +240,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
 
     override fun onClick(track: Track) {
         searchHistory.saveTrack(track)
-        val intent = Intent(this,AudioPlayerActivity::class.java)
+        val intent = Intent(this, AudioPlayerActivity::class.java)
         intent.putExtra(ConstantsKey.TRACK.value, track)
         startActivity(intent)
     }
