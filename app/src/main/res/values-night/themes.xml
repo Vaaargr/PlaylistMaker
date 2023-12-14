@@ -21,6 +21,9 @@
     <attr name="search_activity_secondary_buttons_background"/>
     <attr name="search_activity_secondary_buttons_text_color"/>
 
+    <attr name="audio_player_main_text_color" />
+    <attr name="audio_player_secondary_text_color" />
+
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
 
@@ -44,5 +47,8 @@
         <item name="search_activity_secondary_text_color">@color/white</item>
         <item name="search_activity_secondary_buttons_background">@color/white</item>
         <item name="search_activity_secondary_buttons_text_color">@color/black</item>
+
+        <item name="audio_player_main_text_color">@color/white</item>
+        <item name="audio_player_secondary_text_color">@color/gray</item>
     </style>
 </resources>

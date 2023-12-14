@@ -1,20 +1,23 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.ThemeDictionary
 
 class App : Application() {
     private lateinit var shPref: SharedPreferences
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
     override fun onCreate() {
         super.onCreate()
-        shPref = getSharedPreferences(Constants.SHARED_PREFS_SETTINGS_NAME.value, MODE_PRIVATE)
-        switchTheme(shPref.getBoolean(Constants.THEME_MODE.value, false))
+        shPref =
+            getSharedPreferences(ThemeDictionary.SHARED_PREFS_SETTINGS_NAME.value, MODE_PRIVATE)
+        switchTheme(shPref.getBoolean(ThemeDictionary.THEME_MODE.value, false))
 
         listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == Constants.THEME_MODE.value){
+            if (key == ThemeDictionary.THEME_MODE.value) {
                 switchTheme(sharedPreferences.getBoolean(key, false))
             }
         }

@@ -1,24 +1,24 @@
 package com.example.playlistmaker.activitys
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.enums.Constants
+import com.example.playlistmaker.enums.ConstantsKey
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.Tools
 import com.example.playlistmaker.adapters.SearchRecyclerAdapter
 import com.example.playlistmaker.api.ITunesSearchApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.enums.HistoryDictionary
 import com.example.playlistmaker.enums.SearchResponseVariants
 import com.example.playlistmaker.models.ITunesResponse
 import com.example.playlistmaker.models.Track
@@ -48,15 +48,17 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val roundingRadius = Tools().dpToPx(2F, this)
+
         searchHistory = SearchHistory(
             getSharedPreferences(
-                Constants.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
+                HistoryDictionary.SHARED_PREFS_SEARCH_HISTORY_NAME.value,
                 MODE_PRIVATE
             )
         )
 
-        responseAdapter = SearchRecyclerAdapter( this)
-        historyAdapter = SearchRecyclerAdapter( this)
+        responseAdapter = SearchRecyclerAdapter(this, roundingRadius)
+        historyAdapter = SearchRecyclerAdapter(this, roundingRadius)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
@@ -104,7 +106,6 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
                     val history = searchHistory.getHistory()
                     if (history.isNotEmpty()) {
                         searchRecycler.adapter = historyAdapter
-                        historyAdapter.add(history)
                         setSearchHistoryVisibility(true)
                     } else {
                         setSearchHistoryVisibility(false)
@@ -116,14 +117,12 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
 
             queryInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    historyAdapter.clearList()
                     search()
                 }
                 false
             }
 
             clearSearchHistoryButton.setOnClickListener {
-                historyAdapter.clearList()
                 searchHistory.clearHistory()
                 setSearchHistoryVisibility(false)
             }
@@ -162,7 +161,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString(
-                Constants.SEARCH_ACTIVITY_EDIT_TEXT.value,
+                ConstantsKey.SEARCH_ACTIVITY_EDIT_TEXT.value,
                 ""
             )
         }
@@ -172,7 +171,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (savedText.isNotEmpty()) {
-            outState.putString(Constants.SEARCH_ACTIVITY_EDIT_TEXT.value, savedText)
+            outState.putString(ConstantsKey.SEARCH_ACTIVITY_EDIT_TEXT.value, savedText)
         }
     }
 
@@ -231,10 +230,18 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         with(binding) {
             searchHistoryText.isVisible = input
             clearSearchHistoryButton.isVisible = input
+            if (input) {
+                historyAdapter.add(searchHistory.getHistory())
+            } else {
+                historyAdapter.clearList()
+            }
         }
     }
 
     override fun onClick(track: Track) {
         searchHistory.saveTrack(track)
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra(ConstantsKey.TRACK.value, track)
+        startActivity(intent)
     }
 }

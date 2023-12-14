@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.playlistmaker.App"
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,24 +16,29 @@
         android:theme="@style/Base.Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
+            android:name=".activitys.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activitys.AudioPlayerActivity"
+            android:exported="false"
+            android:parentActivityName=".activitys.SearchActivity"/>
+        <activity
             android:name=".activitys.MusicLibraryActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activitys.SearchActivity"
             android:exported="false"
             android:parentActivityName=".activitys.MainActivity" />
         <activity
-            android:name=".activitys.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activitys.SettingsActivity"
             android:exported="false"
-            android:parentActivityName=".activitys.MainActivity"/>
+            android:parentActivityName=".activitys.MainActivity" />
     </application>
 
 </manifest>
