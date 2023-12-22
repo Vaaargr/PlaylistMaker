@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,6 +36,9 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     private lateinit var searchHistory: SearchHistory
     private lateinit var responseAdapter: SearchRecyclerAdapter
     private lateinit var historyAdapter: SearchRecyclerAdapter
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
+    private var isClickAllowed = true
 
     private var savedText = ""
     private val retrofit = Retrofit.Builder()
@@ -98,6 +103,9 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
                     binding.clearButton.isVisible = !s.isNullOrEmpty()
                     setSearchHistoryVisibility(false)
                     searchRecycler.adapter = responseAdapter
+                    if (savedText.isNotEmpty()) {
+                        searchDebounce(SEARCH_DELAY)
+                    }
                 }
             })
 
@@ -117,7 +125,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
 
             queryInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    search()
+                    searchDebounce(IMMEDIATELY_SEARCH)
                 }
                 false
             }
@@ -130,6 +138,8 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     }
 
     private fun search() {
+        responseAdapter.clearList()
+        showProgressBar(true)
         iTunesService.search(savedText).enqueue(object : Callback<ITunesResponse> {
             override fun onResponse(
                 call: Call<ITunesResponse>,
@@ -218,6 +228,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         errorTextVisibility: Boolean,
         updateButtonVisibility: Boolean
     ) {
+        showProgressBar(false)
         with(binding) {
             searchRecycler.isVisible = searchRecyclerVisibility
             errorImage.isVisible = errorImageVisibility
@@ -239,9 +250,42 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     }
 
     override fun onClick(track: Track) {
-        searchHistory.saveTrack(track)
-        val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra(ConstantsKey.TRACK.value, track)
-        startActivity(intent)
+        if (clickDebounce()) {
+            searchHistory.saveTrack(track)
+            val intent = Intent(this, AudioPlayerActivity::class.java)
+            intent.putExtra(ConstantsKey.TRACK.value, track)
+            startActivity(intent)
+        }
+    }
+
+    private fun searchDebounce(delay: Long) {
+        mainHandler.removeCallbacks(searchRunnable)
+        mainHandler.postDelayed(searchRunnable, delay)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            mainHandler.postDelayed({ isClickAllowed = true }, CLICK_DELAY)
+        }
+        return current
+    }
+
+    private fun showProgressBar(input: Boolean) {
+        with(binding) {
+            progressBar.isVisible = input
+            searchRecycler.isVisible = false
+            errorImage.isVisible = false
+            errorText.isVisible = false
+            updateButton.isVisible = false
+
+        }
+    }
+
+    companion object {
+        private const val SEARCH_DELAY = 2000L
+        private const val IMMEDIATELY_SEARCH = 0L
+        private const val CLICK_DELAY = 1000L
     }
 }

@@ -111,7 +111,7 @@
         app:srcCompat="@drawable/heart" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_4"
@@ -130,7 +130,7 @@
         android:text="@string/duration"
         style="@style/AudioPlayerLeftTextStyle"
         app:layout_constraintStart_toStartOf="@+id/left_second_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/timer_text"
         app:layout_constraintBottom_toTopOf="@id/album_text"/>
 
     <TextView

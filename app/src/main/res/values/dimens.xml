@@ -36,4 +36,6 @@
     <dimen name="error_text_top">16dp</dimen>
 
     <dimen name="action_bar_size_over">56dp</dimen>
+
+    <dimen name="progress_bar_top_margin">124dp</dimen>
 </resources>

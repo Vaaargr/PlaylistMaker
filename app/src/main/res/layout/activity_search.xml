@@ -69,6 +69,16 @@
         android:layout_marginEnd="@dimen/margin_12"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/progress_bar_top_margin"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone"
+            />
+
         <TextView
             android:id="@+id/searchHistoryText"
             style="@style/SearchActivitySecondaryTextStyle"
