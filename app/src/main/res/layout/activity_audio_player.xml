@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/over_activity_background"
-    tools:context=".activitys.AudioPlayerActivity">
+    tools:context=".presentation.ui.audioPlayer.AudioPlayerActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
