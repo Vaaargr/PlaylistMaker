@@ -30,13 +30,6 @@ class SearchRecyclerAdapter(private val listener: TrackClickListener, private va
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
-        holder.itemView.setOnClickListener {
-            listener.onClick(tracks[position])
-        }
-    }
-
-    interface TrackClickListener {
-        fun onClick(track: TrackForView)
+        holder.bind(tracks[position], listener)
     }
 }

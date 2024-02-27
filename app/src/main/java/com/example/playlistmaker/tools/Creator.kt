@@ -25,8 +25,6 @@ import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.SearchTrackUseCaseImpl
 import com.example.playlistmaker.domain.impl.TrackExchangeInteractImpl
-import com.example.playlistmaker.presentation.api.ImageLoaderClient
-import com.example.playlistmaker.presentation.impl.GlideClient
 
 object Creator {
     private lateinit var prefs: SharedPreferences
@@ -49,10 +47,6 @@ object Creator {
 
     fun getTrackExchangeInteractImpl(): TrackExchangeInteract {
         return TrackExchangeInteractImpl(getTrackExchangeRepositoryImpl())
-    }
-
-    fun getImageLoaderClient(): ImageLoaderClient{
-        return GlideClient()
     }
 
     private fun getPlayerClient(): PlayerClient {

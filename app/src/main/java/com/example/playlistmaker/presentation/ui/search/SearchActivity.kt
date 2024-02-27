@@ -25,10 +25,10 @@ import com.example.playlistmaker.presentation.ui.audioPlayer.AudioPlayerActivity
 import com.example.playlistmaker.tools.Creator
 
 
-class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickListener {
+class SearchActivity : AppCompatActivity(), TrackClickListener {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var responseAdapter: SearchRecyclerAdapter
-    private lateinit var historyAdapter: SearchRecyclerAdapter
+    private var responseAdapter: SearchRecyclerAdapter? = null
+    private var historyAdapter: SearchRecyclerAdapter? = null
 
     private val trackExchangeInteract = Creator.getTrackExchangeInteractImpl()
     private val searchTrackUseCase = Creator.getSearchTrackUseCase()
@@ -62,7 +62,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(queryInput.windowToken, 0)
                 queryInput.clearFocus()
-                responseAdapter.clearList()
+                responseAdapter?.clearList()
                 showResult(SearchResponseVariants.GOOD_RESPONSE)
             }
 
@@ -120,7 +120,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
     }
 
     private fun search() {
-        responseAdapter.clearList()
+        responseAdapter?.clearList()
         showProgressBar(true)
         searchTrackUseCase.execute(savedText, object : Consumer {
             override fun consume(searchResponse: SearchResponse) {
@@ -129,7 +129,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
                     if (response.resultCode == 200) {
                         if (response.results.isNotEmpty()) {
                             binding.searchRecycler.adapter = responseAdapter
-                            responseAdapter.add(response.results)
+                            responseAdapter?.add(response.results)
                             showResult(SearchResponseVariants.GOOD_RESPONSE)
 
                         } else {
@@ -150,7 +150,7 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         if (savedInstanceState != null) {
             savedText = savedInstanceState.getString(
-                SEARCH_ACTIVITY_EDIT_TEXT,""
+                SEARCH_ACTIVITY_EDIT_TEXT, ""
             )
         }
         binding.queryInput.setText(savedText)
@@ -220,14 +220,14 @@ class SearchActivity : AppCompatActivity(), SearchRecyclerAdapter.TrackClickList
             searchHistoryText.isVisible = input
             clearSearchHistoryButton.isVisible = input
             if (input) {
-                historyAdapter.add(TrackViewMapper.trackArrayToTrackToViewArrayMap(searchHistory.getHistory()))
+                historyAdapter?.add(TrackViewMapper.trackArrayToTrackToViewArrayMap(searchHistory.getHistory()))
             } else {
-                historyAdapter.clearList()
+                historyAdapter?.clearList()
             }
         }
     }
 
-    override fun onClick(track: TrackForView) {
+    override fun clickOnTrack(track: TrackForView) {
         if (clickDebounce()) {
             searchHistory.saveTrack(TrackViewMapper.trackForViewToTrackMap(track))
             trackExchangeInteract.sendTrack(TrackViewMapper.trackForViewToTrackMap(track))
