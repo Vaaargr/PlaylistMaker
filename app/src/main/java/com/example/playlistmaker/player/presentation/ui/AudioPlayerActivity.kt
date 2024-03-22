@@ -29,8 +29,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         val track = viewModel.getTrack()
 
-        //viewModel.preparePlayer(track.previewUrl)
-
         viewModel.getPlayerState().observe(this) { state ->
             when (state!!) {
                 PlayerViewModel.State.DEFAULT -> changeButton(false)
@@ -55,7 +53,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         imageLoader.loadImage(
             this@AudioPlayerActivity,
             track.artworkUrl512,
-            ROUNDING_RADIUS,
+            resources.getDimensionPixelSize(R.dimen.big_corner_radius),
             binding.albumImage
         )
 
@@ -79,9 +77,5 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun changeButton(isPlayed: Boolean) {
         binding.playButton.setImageResource(if (isPlayed) R.drawable.pause else R.drawable.play)
-    }
-
-    companion object {
-        private const val ROUNDING_RADIUS = 8.0F
     }
 }

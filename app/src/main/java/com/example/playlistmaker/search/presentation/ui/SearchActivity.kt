@@ -37,7 +37,10 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        responseAdapter = SearchRecyclerAdapter(this, ROUNDING_RADIUS)
+        responseAdapter = SearchRecyclerAdapter(
+            this,
+            resources.getDimensionPixelOffset(R.dimen.small_corner_radius)
+        )
 
         viewModel = ViewModelProvider(
             this, SearchingViewModel.factory(
@@ -256,6 +259,5 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
         private const val SEARCH_DELAY_MILLIS = 2000L
         private const val IMMEDIATELY_SEARCH_MILLIS = 0L
         private const val CLICK_DELAY_MILLIS = 1000L
-        private const val ROUNDING_RADIUS = 2F
     }
 }

@@ -17,16 +17,16 @@ class ReceiveTrackShPrefsClient(private val sharedPreferences: SharedPreferences
 
     companion object {
         val TRACK_DTO_MOCK = TrackDto(
-            "empty",
-            "empty",
-            0,
-            null,
-            0,
-            null,
-            "empty",
-            "empty",
-            "empty",
-            "empty"
+            trackName = "empty",
+            artistName = "empty",
+            trackTimeMillis = 0,
+            artworkUrl100 = null,
+            trackId = 0,
+            collectionName = null,
+            releaseDate = "empty",
+            primaryGenreName = "empty",
+            country = "empty",
+            previewUrl = "empty"
         )
     }
 }

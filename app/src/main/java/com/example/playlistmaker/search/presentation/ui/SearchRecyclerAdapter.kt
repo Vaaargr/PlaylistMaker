@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.presentation.model.TrackForView
 
-class SearchRecyclerAdapter(private val listener: TrackClickListener, private val roundingRadius: Float) :
+class SearchRecyclerAdapter(private val listener: TrackClickListener, private val roundingRadius: Int) :
     RecyclerView.Adapter<TrackViewHolder>() {
     private val tracks = ArrayList<TrackForView>()
 

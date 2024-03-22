@@ -38,4 +38,6 @@
     <dimen name="action_bar_size_over">56dp</dimen>
 
     <dimen name="progress_bar_top_margin">124dp</dimen>
+    <dimen name="big_corner_radius">8dp</dimen>
+    <dimen name="small_corner_radius">2dp</dimen>
 </resources>

@@ -8,19 +8,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 
 class GlideClient {
-    fun loadImage(context: Context, url: String?, roundingRadius: Float, view: ImageView) {
+    fun loadImage(context: Context, url: String?, roundingRadius: Int, view: ImageView) {
         Glide.with(context)
             .load(url)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(dpToPx(roundingRadius, context)))
+            .transform(RoundedCorners(roundingRadius))
             .into(view)
-    }
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
     }
 }

@@ -8,7 +8,7 @@ import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.tools.Formatter
 
 
-class TrackViewHolder(private val item: View, private val roundingRadius: Float) : RecyclerView.ViewHolder(item) {
+class TrackViewHolder(private val item: View, private val roundingRadius: Int) : RecyclerView.ViewHolder(item) {
     private val binding = TrackViewBinding.bind(item)
     private val imageLoader = GlideClient()
 
