@@ -11,21 +11,20 @@ import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.player.presentation.ui.AudioPlayerActivity
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity(), TrackClickListener {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel: SearchingViewModel
+    private val viewModel by viewModel<SearchingViewModel>()
 
     private var responseAdapter: SearchRecyclerAdapter? = null
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -41,14 +40,6 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
             this,
             resources.getDimensionPixelOffset(R.dimen.small_corner_radius)
         )
-
-        viewModel = ViewModelProvider(
-            this, SearchingViewModel.factory(
-                Creator.getSendTrackUseCase(),
-                Creator.getSearchTrackUseCase(),
-                Creator.getSearchHistoryInteractor()
-            )
-        )[SearchingViewModel::class.java]
 
         viewModel.getState().observe(this) { state ->
             implementState(state)
