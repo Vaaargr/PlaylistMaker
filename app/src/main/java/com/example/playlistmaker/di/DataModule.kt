@@ -20,6 +20,7 @@ import com.example.playlistmaker.sharing.data.clients.ExternalNavigatorClientImp
 import com.example.playlistmaker.sharing.data.clients.GetInfoFromContextClient
 import com.example.playlistmaker.sharing.data.clientsInterfaces.ExternalNavigatorClient
 import com.example.playlistmaker.sharing.data.clientsInterfaces.GetInfoClient
+import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -42,8 +43,12 @@ val dataModule = module {
         )
     }
 
-    single {
+    factory {
         MediaPlayer()
+    }
+
+    factory {
+        Gson()
     }
 
     single<ExternalNavigatorClient> {
@@ -55,7 +60,7 @@ val dataModule = module {
     }
 
     single<SettingsClient> {
-        SettingsShPrefClient(get(), androidContext().resources.getString(R.string.theme_key))
+        SettingsShPrefClient(get(), androidContext().resources.getString(R.string.theme_key), get())
     }
 
     single<NetworkClient> {
@@ -63,21 +68,30 @@ val dataModule = module {
     }
 
     single<SendTrackLocalClient> {
-        SendTrackShPrefsClient(get(), androidContext().resources.getString(R.string.track_key))
+        SendTrackShPrefsClient(
+            get(),
+            androidContext().resources.getString(R.string.track_key),
+            get()
+        )
     }
 
     single<SearchHistoryClient> {
         SearchHistoryShPrefsClient(
             get(),
-            androidContext().resources.getString(R.string.search_history)
+            androidContext().resources.getString(R.string.search_history),
+            get()
         )
     }
 
     single<ReceiveTrackLocalClient> {
-        ReceiveTrackShPrefsClient(get(), androidContext().resources.getString(R.string.track_key))
+        ReceiveTrackShPrefsClient(
+            get(),
+            androidContext().resources.getString(R.string.track_key),
+            get()
+        )
     }
 
-    single<PlayerClient> {
+    factory<PlayerClient> {
         MediaPlayerClient(get())
     }
 }

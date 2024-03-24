@@ -19,27 +19,27 @@ import com.example.playlistmaker.sharing.domain.api.GetInformationRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    factory<ExternalNavigator> {
+    single<ExternalNavigator> {
         ExternalNavigatorImpl(get())
     }
 
-    factory<GetInformationRepository> {
+    single<GetInformationRepository> {
         GetInformationRepositoryImpl(get())
     }
 
-    factory<SettingsRepository> {
+    single<SettingsRepository> {
         SettingsRepositoryImpl(get())
     }
 
-    factory<SearchHistoryRepository> {
+    single<SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(get())
     }
 
-    factory<SearchTrackRepository> {
+    single<SearchTrackRepository> {
         SearchTrackRepositoryImpl(get())
     }
 
-    factory<SendTrackRepository> {
+    single<SendTrackRepository> {
         SendTrackRepositoryImpl(get())
     }
 
