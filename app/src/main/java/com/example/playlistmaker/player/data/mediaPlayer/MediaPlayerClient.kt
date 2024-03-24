@@ -3,33 +3,36 @@ package com.example.playlistmaker.player.data.mediaPlayer
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.data.clientIterfaces.PlayerClient
 
-class MediaPlayerClient: PlayerClient {
-    private val mediaPlayer = MediaPlayer()
+class MediaPlayerClient(private val mediaPlayer: MediaPlayer) : PlayerClient {
 
-    override fun preparePlayer(url: String, onPreparedListener:() -> Unit, onCompletionListener:() -> Unit){
+    override fun preparePlayer(
+        url: String,
+        onPreparedListener: () -> Unit,
+        onCompletionListener: () -> Unit
+    ) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener{
+        mediaPlayer.setOnPreparedListener {
             onPreparedListener.invoke()
         }
-        mediaPlayer.setOnCompletionListener{
+        mediaPlayer.setOnCompletionListener {
             onCompletionListener.invoke()
         }
     }
 
-    override fun getCurrentPosition(): Int{
+    override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
 
-    override fun release(){
+    override fun release() {
         mediaPlayer.release()
     }
 
-    override fun start(){
+    override fun start() {
         mediaPlayer.start()
     }
 
-    override fun pause(){
+    override fun pause() {
         mediaPlayer.pause()
     }
 

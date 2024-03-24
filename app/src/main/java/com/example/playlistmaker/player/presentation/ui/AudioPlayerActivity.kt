@@ -3,17 +3,16 @@ package com.example.playlistmaker.player.presentation.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.tools.GlideClient
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.presentation.viewModel.PlayerViewModel
 import com.example.playlistmaker.tools.Formatter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     private val imageLoader = GlideClient()
 
@@ -21,11 +20,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.factory(Creator.getPlayerInteractor(), Creator.getReceiveTrackUseCase())
-        )[PlayerViewModel::class.java]
 
         val track = viewModel.getTrack()
 

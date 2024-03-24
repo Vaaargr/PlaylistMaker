@@ -6,26 +6,26 @@ import com.example.playlistmaker.search.data.dto.ITunesResponse
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.google.gson.Gson
 
-class SharedPrefsSearchHistoryClient(private val sharedPreferences: SharedPreferences) :
+class SearchHistoryShPrefsClient(
+    private val sharedPreferences: SharedPreferences,
+    private val historyKey: String,
+    private val gson: Gson
+) :
     SearchHistoryClient {
     override fun getHistory(): ArrayList<TrackDto> {
         val json =
-            sharedPreferences.getString(SEARCH_HISTORY, null)
+            sharedPreferences.getString(historyKey, null)
                 ?: return ArrayList<TrackDto>()
-        return Gson().fromJson(json, ITunesResponse::class.java).results
+        return gson.fromJson(json, ITunesResponse::class.java).results
     }
 
     override fun clearHistory() {
-        sharedPreferences.edit().remove(SEARCH_HISTORY).apply()
+        sharedPreferences.edit().remove(historyKey).apply()
     }
 
     override fun saveHistory(inputHistory: ArrayList<TrackDto>) {
         sharedPreferences.edit()
-            .putString(SEARCH_HISTORY, Gson().toJson(ITunesResponse(inputHistory)))
+            .putString(historyKey, gson.toJson(ITunesResponse(inputHistory)))
             .apply()
-    }
-
-    companion object {
-        const val SEARCH_HISTORY = "search history"
     }
 }

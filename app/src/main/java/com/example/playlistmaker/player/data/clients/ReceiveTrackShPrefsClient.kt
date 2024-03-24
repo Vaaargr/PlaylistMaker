@@ -5,13 +5,13 @@ import com.example.playlistmaker.player.data.clientIterfaces.ReceiveTrackLocalCl
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.google.gson.Gson
 
-class ReceiveTrackShPrefsClient(private val sharedPreferences: SharedPreferences,private val trackKey: String): ReceiveTrackLocalClient {
+class ReceiveTrackShPrefsClient(private val sharedPreferences: SharedPreferences,private val trackKey: String, private val gson: Gson): ReceiveTrackLocalClient {
     override fun receiveTrack(): TrackDto {
         val json = sharedPreferences.getString(trackKey, "")
         return if (json.isNullOrEmpty()) {
             TRACK_DTO_MOCK
         } else {
-            Gson().fromJson(json, TrackDto::class.java)
+            gson.fromJson(json, TrackDto::class.java)
         }
     }
 

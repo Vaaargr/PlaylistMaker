@@ -25,4 +25,9 @@
     <string name="year">Year</string>
     <string name="genre">Genre</string>
     <string name="country">Country</string>
+    <string name="i_tunes_base_url" translatable="false">https://itunes.apple.com</string>
+    <string name="history_key" translatable="false">search history</string>
+    <string name="sh_prefs_name" translatable="false">shared prefs name</string>
+    <string name="theme_key" translatable="false">theme key</string>
+    <string name="track_key" translatable="false">track key</string>
 </resources>
