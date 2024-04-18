@@ -56,4 +56,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("io.insert-koin:koin-android:3.3.0")
+
+    implementation("com.google.android.material:material:1.8.0")
 }

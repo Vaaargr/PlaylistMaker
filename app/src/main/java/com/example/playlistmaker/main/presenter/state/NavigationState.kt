@@ -1,6 +1,6 @@
 package com.example.playlistmaker.main.presenter.state
 
-import com.example.playlistmaker.musicLibrary.MusicLibraryActivity
+import com.example.playlistmaker.musicLibrary.presentation.ui.MusicLibraryActivity
 import com.example.playlistmaker.search.presentation.ui.SearchActivity
 import com.example.playlistmaker.settings.presentation.ui.SettingsActivity
 

@@ -29,8 +29,9 @@
             android:exported="false"
             android:parentActivityName=".search.presentation.ui.SearchActivity"/>
         <activity
-            android:name=".musicLibrary.MusicLibraryActivity"
-            android:exported="false" />
+            android:name=".musicLibrary.presentation.ui.MusicLibraryActivity"
+            android:exported="false"
+            android:parentActivityName=".main.ui.MainActivity" />
         <activity
             android:name=".search.presentation.ui.SearchActivity"
             android:exported="false"
