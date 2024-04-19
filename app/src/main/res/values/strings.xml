@@ -30,4 +30,9 @@
     <string name="sh_prefs_name" translatable="false">shared prefs name</string>
     <string name="theme_key" translatable="false">theme key</string>
     <string name="track_key" translatable="false">track key</string>
+    <string name="empty_track_library">Your media library is empty.</string>
+    <string name="empty_playlists_library">You haven\'t created\nany playlists.</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="featured_tracks">Featured tracks</string>
+    <string name="playlists">Playlists</string>
 </resources>

@@ -24,6 +24,12 @@
     <attr name="audio_player_main_text_color" />
     <attr name="audio_player_secondary_text_color" />
 
+    <attr name="music_library_text_color"/>
+    <attr name="music_library_button_background"/>
+    <attr name="music_library_button_text_color"/>
+    <attr name="music_library_tab_background"/>
+    <attr name="music_library_tab_text_color"/>
+
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
 
@@ -50,5 +56,11 @@
 
         <item name="audio_player_main_text_color">@color/white</item>
         <item name="audio_player_secondary_text_color">@color/gray</item>
+
+        <item name="music_library_text_color">@color/white</item>
+        <item name="music_library_button_background">@color/white</item>
+        <item name="music_library_button_text_color">@color/black</item>
+        <item name="music_library_tab_background">@color/black</item>
+        <item name="music_library_tab_text_color">@color/white</item>
     </style>
 </resources>
