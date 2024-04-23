@@ -44,8 +44,8 @@ class SearchingViewModel(
         requestLiveData.postValue(request)
     }
 
-    fun changeRequest(request: String): Boolean{
-        return if (request.isNotEmpty() && request != getRequest()){
+    fun changeRequest(request: String): Boolean {
+        return if (request.isNotEmpty() && request != getRequest()) {
             setRequest(request)
             true
         } else {
@@ -53,7 +53,7 @@ class SearchingViewModel(
         }
     }
 
-    fun clearRequest(){
+    fun clearRequest() {
         setRequest("")
     }
 
@@ -82,6 +82,12 @@ class SearchingViewModel(
 
     fun clearHistory() {
         searchHistory.clearHistory()
+        setState(
+            SearchActivityState.Response(
+                ResponseResult.GOOD,
+                emptyList()
+            )
+        )
     }
 
     fun sendTrack(track: TrackForView) {

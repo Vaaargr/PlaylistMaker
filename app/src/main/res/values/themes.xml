@@ -6,6 +6,10 @@
     <attr name="main_activity_button_text" />
     <attr name="main_activity_icon_tint" />
 
+    <attr name="bottom_nav_background"/>
+    <attr name="bottom_nav_text_color"/>
+    <attr name="bottom_nav_icon_tint"/>
+
     <attr name="over_activity_background" />
 
     <attr name="settings_activity_button_background" />
@@ -41,6 +45,10 @@
         <item name="main_activity_button_text">@color/black</item>
         <item name="main_activity_icon_tint">@color/black</item>
         <item name="main_activity_title_text">@color/white</item>
+
+        <item name="bottom_nav_background">@color/white</item>
+        <item name="bottom_nav_text_color">@color/black</item>
+        <item name="bottom_nav_icon_tint">@color/black</item>
 
         <item name="over_activity_background">@color/white</item>
 

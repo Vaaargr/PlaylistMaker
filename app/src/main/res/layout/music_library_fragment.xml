@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="?attr/over_activity_background"
     android:orientation="vertical"
-    tools:context=".musicLibrary.presentation.ui.MusicLibraryActivity">
+    tools:context=".musicLibrary.presentation.ui.MusicLibraryFragment">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/back_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"

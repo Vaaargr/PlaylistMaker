@@ -2,18 +2,21 @@ package com.example.playlistmaker.search.presentation.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.player.presentation.ui.AudioPlayerActivity
 import com.example.playlistmaker.search.presentation.model.ResponseResult
@@ -22,8 +25,11 @@ import com.example.playlistmaker.search.presentation.viewModel.SearchingViewMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SearchActivity : AppCompatActivity(), TrackClickListener {
-    private lateinit var binding: ActivitySearchBinding
+class SearchFragment : Fragment(), TrackClickListener {
+
+    private var _binding: SearchFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel by viewModel<SearchingViewModel>()
 
     private var responseAdapter: SearchRecyclerAdapter? = null
@@ -31,29 +37,36 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
     private val searchRunnable = Runnable { search() }
     private var isClickAllowed = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = SearchFragmentBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         responseAdapter = SearchRecyclerAdapter(
             this,
             resources.getDimensionPixelOffset(R.dimen.small_corner_radius)
         )
 
-        viewModel.getState().observe(this) { state ->
+        viewModel.getState().observe(viewLifecycleOwner) { state ->
             implementState(state)
         }
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-            setHomeAsUpIndicator(R.drawable.toolbar_back_arrow)
-        }
+
 
         with(binding) {
-            searchRecycler.layoutManager = LinearLayoutManager(this@SearchActivity)
+            searchRecycler.layoutManager = LinearLayoutManager(context)
             searchRecycler.adapter = responseAdapter
 
             queryInput.setText(viewModel.getRequest())
@@ -61,7 +74,7 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
             clearButton.setOnClickListener {
                 queryInput.setText("")
                 viewModel.clearRequest()
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(queryInput.windowToken, 0)
                 queryInput.clearFocus()
                 responseAdapter?.clearList()
@@ -92,6 +105,8 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
                         binding.clearButton.isVisible = false
                         mainHandler.removeCallbacks(searchRunnable)
                         viewModel.checkHistory()
+                    } else {
+                        binding.clearButton.isVisible = true
                     }
                 }
             })
@@ -216,7 +231,7 @@ class SearchActivity : AppCompatActivity(), TrackClickListener {
             viewModel.saveTrack(track)
             viewModel.sendTrack(track)
 
-            val intent = Intent(this, AudioPlayerActivity::class.java)
+            val intent = Intent(context, AudioPlayerActivity::class.java)
             startActivity(intent)
         }
     }

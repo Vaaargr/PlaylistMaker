@@ -57,6 +57,14 @@
         <item name="android:textSize">@dimen/text_22</item>
     </style>
 
+    <style name="BottomNavStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">?attr/bottom_nav_background</item>
+        <item name="itemTextColor">@drawable/icon_color</item>
+        <item name="itemIconTint">@drawable/icon_color</item>
+        <item name="fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/text_12</item>
+    </style>
+
     <style name="MainText">
         <item name="android:fontFamily">@font/ys_display</item>
     </style>
