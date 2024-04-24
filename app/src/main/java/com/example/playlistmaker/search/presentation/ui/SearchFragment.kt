@@ -41,9 +41,15 @@ class SearchFragment : Fragment(), TrackClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = SearchFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.queryInput.setText("")
+        viewModel.clearRequest()
     }
 
     override fun onDestroyView() {
@@ -53,6 +59,8 @@ class SearchFragment : Fragment(), TrackClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.checkHistory()
 
         responseAdapter = SearchRecyclerAdapter(
             this,
@@ -74,7 +82,7 @@ class SearchFragment : Fragment(), TrackClickListener {
             clearButton.setOnClickListener {
                 queryInput.setText("")
                 viewModel.clearRequest()
-                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(queryInput.windowToken, 0)
                 queryInput.clearFocus()
                 responseAdapter?.clearList()

@@ -24,7 +24,7 @@ class EmptyTracksFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = EmptyTracksFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
     }

@@ -92,17 +92,16 @@ class PlayerViewModel(
         setState(State.PLAYING)
     }
 
-    private fun playerPause() {
+    fun playerPause() {
         player.pause()
         setState(State.PAUSED)
     }
 
-    fun preparePlayer(url: String) {
+    private fun preparePlayer(url: String) {
         val onPreparedListener = {
-            isTimer = true
-            setState(State.PREPARED)
             trackDuration = player.getDuration()
             setTimer(player.getDuration() + 1000)
+            setState(State.PREPARED)
         }
         val onCompletionListener = {
             isTimer = false
@@ -110,6 +109,12 @@ class PlayerViewModel(
             setTimer(player.getDuration() + 1000)
         }
         player.preparePlayer(url, onPreparedListener, onCompletionListener)
+    }
+
+    fun releasePlayer(){
+        isTimer = false
+        player.release()
+        setState(State.DEFAULT)
     }
 
     override fun onCleared() {

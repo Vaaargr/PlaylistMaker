@@ -68,4 +68,9 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun changeButton(isPlayed: Boolean) {
         binding.playButton.setImageResource(if (isPlayed) R.drawable.pause else R.drawable.play)
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.playerPause()
+    }
 }

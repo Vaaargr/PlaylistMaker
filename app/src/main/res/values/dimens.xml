@@ -28,6 +28,8 @@
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_26">26dp</dimen>
     <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_46">46dp</dimen>
+    <dimen name="margin_106">106dp</dimen>
     <!--Over-->
     <dimen name="elevation">18dp</dimen>
     <dimen name="small_corner">8dp</dimen>

@@ -19,7 +19,7 @@ class MusicLibraryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = MusicLibraryFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
