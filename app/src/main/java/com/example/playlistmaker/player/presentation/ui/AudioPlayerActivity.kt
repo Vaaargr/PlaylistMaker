@@ -24,12 +24,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         val track = viewModel.getTrack()
 
         viewModel.getPlayerState().observe(this) { state ->
-            when (state!!) {
-                PlayerViewModel.State.DEFAULT -> changeButton(false)
-                PlayerViewModel.State.PREPARED -> changeButton(false)
-                PlayerViewModel.State.PLAYING -> changeButton(true)
-                PlayerViewModel.State.PAUSED -> changeButton(false)
-            }
+            changeButton(state.buttonState)
         }
 
         viewModel.getTimer().observe(this) { time ->
