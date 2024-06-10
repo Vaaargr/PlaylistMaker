@@ -8,25 +8,23 @@
 
     <Button
         android:id="@+id/button"
+        style="@style/MusicLibraryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_playlist"
-        style="@style/MusicLibraryButton"
-        app:layout_constraintBottom_toTopOf="@+id/emptyPlaylistsImage"
         app:layout_constraintEnd_toEndOf="@+id/emptyPlaylistsImage"
         app:layout_constraintStart_toStartOf="@+id/emptyPlaylistsImage"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32999998" />
+        android:layout_marginTop="@dimen/margin_24"/>
 
     <ImageView
         android:id="@+id/emptyPlaylistsImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        android:layout_marginTop="@dimen/margin_46"
         app:srcCompat="@drawable/empty_search" />
 
     <TextView

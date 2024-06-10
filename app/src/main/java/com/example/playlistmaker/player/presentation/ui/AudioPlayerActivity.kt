@@ -36,14 +36,6 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding.timerText.text = Formatter.timeFormat(time)
         }
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-            setDisplayShowTitleEnabled(false)
-            setHomeAsUpIndicator(R.drawable.toolbar_back_arrow)
-        }
-
         imageLoader.loadImage(
             this@AudioPlayerActivity,
             track.artworkUrl512,
@@ -67,9 +59,18 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.playButton.setOnClickListener {
             viewModel.playStopButtonClick()
         }
+
+        binding.backButton.setOnClickListener {
+            this@AudioPlayerActivity.onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun changeButton(isPlayed: Boolean) {
         binding.playButton.setImageResource(if (isPlayed) R.drawable.pause else R.drawable.play)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.playerPause()
     }
 }
