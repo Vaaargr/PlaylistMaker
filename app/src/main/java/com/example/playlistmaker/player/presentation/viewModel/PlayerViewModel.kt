@@ -9,6 +9,8 @@ import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCa
 import com.example.playlistmaker.player.presentation.PlayerState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.TrackForView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -16,8 +18,7 @@ class PlayerViewModel(
     private val player: PlayerInteractor,
     private val receive: ReceiveTrackUseCase
 ) : ViewModel() {
-    private var isTimer = false
-    private var trackDuration = 0
+    private var timerJob: Job? = null
 
     private val trackLiveData =
         MutableLiveData<TrackForView>()
@@ -65,49 +66,44 @@ class PlayerViewModel(
             is PlayerState.DEFAULT -> preparePlayer(getTrack().previewUrl)
             is PlayerState.PAUSED -> playerPlay()
             is PlayerState.PLAYING -> playerPause()
-            is PlayerState.PREPARED -> firstPlay()
-        }
-    }
-
-    private fun firstPlay() {
-        isTimer = true
-        playerPlay()
-        viewModelScope.launch {
-            while (isTimer) {
-                if (getState() is PlayerState.PLAYING) {
-                    setTimer(trackDuration - player.getCurrentPosition())
-                }
-                delay(TIMER_DELAY_MILLIS)
-            }
+            is PlayerState.PREPARED -> playerPlay()
         }
     }
 
     private fun playerPlay() {
         player.start()
+        timerJob = viewModelScope.launch {
+            while (true) {
+                if (getState() is PlayerState.PLAYING) {
+                    setTimer(player.getCurrentPosition())
+                }
+                delay(TIMER_DELAY_MILLIS)
+            }
+        }
         setState(PlayerState.PLAYING())
     }
 
     fun playerPause() {
         player.pause()
+        timerJob?.cancel()
         setState(PlayerState.PAUSED())
     }
 
     private fun preparePlayer(url: String) {
         val onPreparedListener = {
-            trackDuration = player.getDuration()
-            setTimer(player.getDuration())
+            setTimer(0)
             setState(PlayerState.PREPARED())
         }
         val onCompletionListener = {
-            isTimer = false
+            timerJob?.cancel()
             setState(PlayerState.PREPARED())
-            //setTimer(player.getDuration())
+            setTimer(0)
         }
         player.preparePlayer(url, onPreparedListener, onCompletionListener)
     }
 
     private fun releasePlayer() {
-        isTimer = false
+        timerJob?.cancel()
         player.release()
     }
 

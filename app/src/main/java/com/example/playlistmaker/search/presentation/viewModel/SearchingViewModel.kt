@@ -12,6 +12,9 @@ import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchingViewModel(
@@ -26,6 +29,8 @@ class SearchingViewModel(
             emptyList()
         )
     )
+
+    private var searchJob: Job? = null
 
     private val requestLiveData = MutableLiveData<String>("")
 
@@ -54,8 +59,16 @@ class SearchingViewModel(
         setRequest("")
     }
 
-    fun search() {
-        viewModelScope.launch {
+    fun cancelSearch(){
+        searchJob?.cancel()
+    }
+
+    fun search(searchDelay: Long) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(searchDelay)
+
             searchTrackUseCase.execute(getRequest() ?: "")
                 .collect { searchResponse ->
                     setState(SearchResponseMapper.map(searchResponse))

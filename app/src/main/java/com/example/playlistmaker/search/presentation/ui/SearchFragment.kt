@@ -35,7 +35,6 @@ class SearchFragment : Fragment(), TrackClickListener {
     private val viewModel by viewModel<SearchingViewModel>()
 
     private var responseAdapter: SearchRecyclerAdapter? = null
-    private var searchJob : Job? = null
     private var isClickAllowed = true
 
     override fun onCreateView(
@@ -92,7 +91,7 @@ class SearchFragment : Fragment(), TrackClickListener {
             }
 
             updateButton.setOnClickListener {
-                searchDebounce(IMMEDIATELY_SEARCH_MILLIS)
+                search(IMMEDIATELY_SEARCH_MILLIS)
             }
 
             queryInput.addTextChangedListener(object : TextWatcher {
@@ -109,10 +108,10 @@ class SearchFragment : Fragment(), TrackClickListener {
                     if (viewModel.changeRequest(s.toString())) {
                         binding.clearButton.isVisible = true
                         hideHistory()
-                        searchDebounce(SEARCH_DELAY_MILLIS)
+                        search(SEARCH_DELAY_MILLIS)
                     } else if (s.isNullOrEmpty()) {
                         binding.clearButton.isVisible = false
-                        searchJob?.cancel()
+                        viewModel.cancelSearch()
                         viewModel.checkHistory()
                     } else {
                         binding.clearButton.isVisible = true
@@ -132,7 +131,7 @@ class SearchFragment : Fragment(), TrackClickListener {
 
             queryInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    searchDebounce(IMMEDIATELY_SEARCH_MILLIS)
+                    search(IMMEDIATELY_SEARCH_MILLIS)
                 }
                 false
             }
@@ -144,9 +143,9 @@ class SearchFragment : Fragment(), TrackClickListener {
         }
     }
 
-    private fun search() {
+    private fun search(searchDelay: Long) {
         showProgressBar(true)
-        viewModel.search()
+        viewModel.search(searchDelay)
     }
 
     private fun implementState(state: SearchActivityState) {
@@ -242,15 +241,6 @@ class SearchFragment : Fragment(), TrackClickListener {
 
             val intent = Intent(context, AudioPlayerActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-    private fun searchDebounce(searchDelay: Long) {
-        searchJob?.cancel()
-
-        searchJob = viewLifecycleOwner.lifecycleScope.launch {
-            delay(searchDelay)
-            search()
         }
     }
 
