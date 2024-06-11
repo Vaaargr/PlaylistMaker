@@ -3,8 +3,6 @@ package com.example.playlistmaker.search.presentation.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
@@ -22,6 +21,9 @@ import com.example.playlistmaker.player.presentation.ui.AudioPlayerActivity
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -33,8 +35,6 @@ class SearchFragment : Fragment(), TrackClickListener {
     private val viewModel by viewModel<SearchingViewModel>()
 
     private var responseAdapter: SearchRecyclerAdapter? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { search() }
     private var isClickAllowed = true
 
     override fun onCreateView(
@@ -91,7 +91,7 @@ class SearchFragment : Fragment(), TrackClickListener {
             }
 
             updateButton.setOnClickListener {
-                searchDebounce(IMMEDIATELY_SEARCH_MILLIS)
+                search(IMMEDIATELY_SEARCH_MILLIS)
             }
 
             queryInput.addTextChangedListener(object : TextWatcher {
@@ -108,10 +108,10 @@ class SearchFragment : Fragment(), TrackClickListener {
                     if (viewModel.changeRequest(s.toString())) {
                         binding.clearButton.isVisible = true
                         hideHistory()
-                        searchDebounce(SEARCH_DELAY_MILLIS)
+                        search(SEARCH_DELAY_MILLIS)
                     } else if (s.isNullOrEmpty()) {
                         binding.clearButton.isVisible = false
-                        mainHandler.removeCallbacks(searchRunnable)
+                        viewModel.cancelSearch()
                         viewModel.checkHistory()
                     } else {
                         binding.clearButton.isVisible = true
@@ -131,7 +131,7 @@ class SearchFragment : Fragment(), TrackClickListener {
 
             queryInput.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    searchDebounce(IMMEDIATELY_SEARCH_MILLIS)
+                    search(IMMEDIATELY_SEARCH_MILLIS)
                 }
                 false
             }
@@ -143,9 +143,9 @@ class SearchFragment : Fragment(), TrackClickListener {
         }
     }
 
-    private fun search() {
+    private fun search(searchDelay: Long) {
         showProgressBar(true)
-        viewModel.search()
+        viewModel.search(searchDelay)
     }
 
     private fun implementState(state: SearchActivityState) {
@@ -244,16 +244,14 @@ class SearchFragment : Fragment(), TrackClickListener {
         }
     }
 
-    private fun searchDebounce(delay: Long) {
-        mainHandler.removeCallbacks(searchRunnable)
-        mainHandler.postDelayed(searchRunnable, delay)
-    }
-
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            mainHandler.postDelayed({ isClickAllowed = true }, CLICK_DELAY_MILLIS)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }

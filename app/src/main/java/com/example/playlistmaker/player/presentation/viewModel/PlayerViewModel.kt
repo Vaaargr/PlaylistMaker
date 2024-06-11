@@ -1,43 +1,32 @@
 package com.example.playlistmaker.player.presentation.viewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
+import com.example.playlistmaker.player.presentation.PlayerState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.TrackForView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val player: PlayerInteractor,
     private val receive: ReceiveTrackUseCase
 ) : ViewModel() {
-    private var isTimer = false
-    private var trackDuration = 0
-    private val mainHandler = Handler(Looper.getMainLooper())
-
-    private val timerRunnable = Runnable {
-        while (isTimer) {
-            if (getState() == State.PLAYING) {
-                mainHandler.post {
-                    setTimer(trackDuration - player.getCurrentPosition())
-                }
-            }
-            Thread.sleep(TIMER_DELAY_MILLIS)
-        }
-    }
+    private var timerJob: Job? = null
 
     private val trackLiveData =
         MutableLiveData<TrackForView>()
 
     private val timerLiveData = MutableLiveData<Int>()
 
-    private val playerStateLiveData = MutableLiveData(State.DEFAULT)
+    private val playerStateLiveData: MutableLiveData<PlayerState> =
+        MutableLiveData(PlayerState.DEFAULT())
 
     private fun setTrack(track: TrackForView) {
         trackLiveData.value = track
@@ -52,7 +41,7 @@ class PlayerViewModel(
         timerLiveData.postValue(timer)
     }
 
-    private fun setState(state: State) {
+    private fun setState(state: PlayerState) {
         playerStateLiveData.postValue(state)
     }
 
@@ -64,83 +53,66 @@ class PlayerViewModel(
         return timerLiveData
     }
 
-    fun getPlayerState(): LiveData<State> {
+    fun getPlayerState(): LiveData<PlayerState> {
         return playerStateLiveData
     }
 
-    private fun getState(): State {
+    private fun getState(): PlayerState {
         return getPlayerState().value!!
     }
 
     fun playStopButtonClick() {
         when (getState()) {
-            State.PREPARED -> firstPlay()
-            State.PLAYING -> playerPause()
-            State.PAUSED -> playerPlay()
-            State.DEFAULT -> preparePlayer(getTrack().previewUrl)
+            is PlayerState.DEFAULT -> preparePlayer(getTrack().previewUrl)
+            is PlayerState.PAUSED -> playerPlay()
+            is PlayerState.PLAYING -> playerPause()
+            is PlayerState.PREPARED -> playerPlay()
         }
-    }
-
-    private fun firstPlay() {
-        isTimer = true
-        playerPlay()
-        Thread(timerRunnable).start()
     }
 
     private fun playerPlay() {
         player.start()
-        setState(State.PLAYING)
+        timerJob = viewModelScope.launch {
+            while (true) {
+                if (getState() is PlayerState.PLAYING) {
+                    setTimer(player.getCurrentPosition())
+                }
+                delay(TIMER_DELAY_MILLIS)
+            }
+        }
+        setState(PlayerState.PLAYING())
     }
 
     fun playerPause() {
         player.pause()
-        setState(State.PAUSED)
+        timerJob?.cancel()
+        setState(PlayerState.PAUSED())
     }
 
     private fun preparePlayer(url: String) {
         val onPreparedListener = {
-            trackDuration = player.getDuration()
-            setTimer(player.getDuration() + 1000)
-            setState(State.PREPARED)
+            setTimer(0)
+            setState(PlayerState.PREPARED())
         }
         val onCompletionListener = {
-            isTimer = false
-            setState(State.PREPARED)
-            setTimer(player.getDuration() + 1000)
+            timerJob?.cancel()
+            setState(PlayerState.PREPARED())
+            setTimer(0)
         }
         player.preparePlayer(url, onPreparedListener, onCompletionListener)
     }
 
-    fun releasePlayer(){
-        isTimer = false
+    private fun releasePlayer() {
+        timerJob?.cancel()
         player.release()
-        setState(State.DEFAULT)
     }
 
     override fun onCleared() {
         super.onCleared()
-        isTimer = false
-        player.release()
+        releasePlayer()
     }
 
     companion object {
-        private const val TIMER_DELAY_MILLIS = 250L
-        fun factory(
-            player: PlayerInteractor,
-            receive: ReceiveTrackUseCase
-        ): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    PlayerViewModel(player = player, receive = receive)
-                }
-            }
-        }
-    }
-
-    enum class State {
-        DEFAULT,
-        PREPARED,
-        PLAYING,
-        PAUSED,
+        private const val TIMER_DELAY_MILLIS = 300L
     }
 }

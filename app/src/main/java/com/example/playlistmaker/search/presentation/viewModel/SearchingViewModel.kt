@@ -3,19 +3,19 @@ package com.example.playlistmaker.search.presentation.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.interactors.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.interactors.SearchTrackUseCase
 import com.example.playlistmaker.search.domain.api.interactors.SendTrackUseCase
-import com.example.playlistmaker.search.domain.consumer.Consumer
-import com.example.playlistmaker.search.domain.entity.SearchResponse
 import com.example.playlistmaker.search.presentation.mappers.SearchResponseMapper
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchingViewModel(
     private val sendTrackUseCase: SendTrackUseCase,
@@ -29,6 +29,8 @@ class SearchingViewModel(
             emptyList()
         )
     )
+
+    private var searchJob: Job? = null
 
     private val requestLiveData = MutableLiveData<String>("")
 
@@ -57,12 +59,21 @@ class SearchingViewModel(
         setRequest("")
     }
 
-    fun search() {
-        searchTrackUseCase.execute(getRequest() ?: "", object : Consumer {
-            override fun consume(searchResponse: SearchResponse) {
-                setState(SearchResponseMapper.map(searchResponse))
-            }
-        })
+    fun cancelSearch(){
+        searchJob?.cancel()
+    }
+
+    fun search(searchDelay: Long) {
+        searchJob?.cancel()
+
+        searchJob = viewModelScope.launch {
+            delay(searchDelay)
+
+            searchTrackUseCase.execute(getRequest() ?: "")
+                .collect { searchResponse ->
+                    setState(SearchResponseMapper.map(searchResponse))
+                }
+        }
     }
 
     fun checkHistory() {
@@ -92,19 +103,5 @@ class SearchingViewModel(
 
     fun sendTrack(track: TrackForView) {
         sendTrackUseCase.execute(TrackViewMapper.trackForViewToTrackMap(track))
-    }
-
-    companion object {
-        fun factory(
-            sendTrackUseCase: SendTrackUseCase,
-            searchTrackUseCase: SearchTrackUseCase,
-            searchHistory: SearchHistoryInteractor
-        ): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SearchingViewModel(sendTrackUseCase, searchTrackUseCase, searchHistory)
-                }
-            }
-        }
     }
 }
