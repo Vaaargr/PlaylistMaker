@@ -5,9 +5,10 @@ import com.example.playlistmaker.search.presentation.model.TrackForView
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-object TrackViewMapper {
+class TrackViewMapper {
     fun trackToTrackForViewMap(track: Track): TrackForView {
         return TrackForView(
+            id = track.id,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -28,6 +29,7 @@ object TrackViewMapper {
 
     fun trackForViewToTrackMap(trackForView: TrackForView): Track {
         return Track(
+            id = trackForView.id,
             trackName = trackForView.trackName,
             artistName = trackForView.artistName,
             trackTimeMillis = trackForView.trackTimeMillis,

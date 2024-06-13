@@ -4,13 +4,13 @@ import com.example.playlistmaker.search.domain.entity.SearchResponse
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 
-object SearchResponseMapper {
+class SearchResponseMapper(private val mapper: TrackViewMapper) {
     fun map(searchResponse: SearchResponse): SearchActivityState.Response {
         return if (searchResponse.resultCode == 200) {
             if (searchResponse.trackList.isNotEmpty()) {
                 SearchActivityState.Response(
                     ResponseResult.GOOD,
-                    searchResponse.trackList.map { TrackViewMapper.trackToTrackForViewMap(it) }
+                    searchResponse.trackList.map { mapper.trackToTrackForViewMap(it) }
                 )
             } else {
                 SearchActivityState.Response(ResponseResult.EMPTY, emptyList())

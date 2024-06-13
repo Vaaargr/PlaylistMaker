@@ -3,9 +3,10 @@ package com.example.playlistmaker.search.data.mapper
 import com.example.playlistmaker.search.data.dto.TrackDto
 import com.example.playlistmaker.search.domain.entity.Track
 
-object TrackDtoMapper {
+class TrackDtoMapper {
     fun trackDtoToTrackMap(trackDto: TrackDto): Track {
         return Track(
+            id = trackDto.id,
             trackName = trackDto.trackName,
             artistName = trackDto.artistName,
             trackTimeMillis = trackDto.trackTimeMillis,
@@ -22,6 +23,7 @@ object TrackDtoMapper {
 
     fun trackToTrackDtoMap(track: Track): TrackDto {
         return TrackDto(
+            id = track.id,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,

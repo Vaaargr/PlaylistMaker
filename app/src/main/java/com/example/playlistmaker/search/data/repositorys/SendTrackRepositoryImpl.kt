@@ -5,8 +5,8 @@ import com.example.playlistmaker.search.data.mapper.TrackDtoMapper
 import com.example.playlistmaker.search.domain.api.repositorys.SendTrackRepository
 import com.example.playlistmaker.search.domain.entity.Track
 
-class SendTrackRepositoryImpl(private val client: SendTrackLocalClient): SendTrackRepository {
+class SendTrackRepositoryImpl(private val client: SendTrackLocalClient, private val trackMapper: TrackDtoMapper): SendTrackRepository {
     override fun sendTrack(track: Track) {
-        client.sendTrack(TrackDtoMapper.trackToTrackDtoMap(track))
+        client.sendTrack(trackMapper.trackToTrackDtoMap(track))
     }
 }

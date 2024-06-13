@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.tools.GlideClient
 import com.example.playlistmaker.player.presentation.viewModel.PlayerViewModel
 import com.example.playlistmaker.tools.Formatter
@@ -29,6 +30,13 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         viewModel.getTimer().observe(this) { time ->
             binding.timerText.text = Formatter.timeFormat(time)
+        }
+
+        viewModel.getSavedTrackState().observe(this){state ->
+            when(state){
+                SavedTrackState.savedTrack -> binding.likeButton.setImageResource(R.drawable.saved_heart)
+                SavedTrackState.unsavedTrack -> binding.likeButton.setImageResource(R.drawable.unsaved_heart)
+            }
         }
 
         imageLoader.loadImage(
@@ -57,6 +65,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         binding.backButton.setOnClickListener {
             this@AudioPlayerActivity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.likeButton.setOnClickListener {
+            viewModel.lickButtonClick()
         }
     }
 

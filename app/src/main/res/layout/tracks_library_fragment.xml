@@ -9,20 +9,34 @@
         android:id="@+id/emptyPlaylistsImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_106"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/margin_106"
         app:srcCompat="@drawable/empty_search" />
 
     <TextView
         android:id="@+id/emptyPlaylistsText"
+        style="@style/MusicLibraryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text= "@string/empty_track_library"
         android:layout_marginTop="@dimen/margin_16"
+        android:text="@string/empty_track_library"
         app:layout_constraintEnd_toEndOf="@+id/emptyPlaylistsImage"
         app:layout_constraintStart_toStartOf="@+id/emptyPlaylistsImage"
-        app:layout_constraintTop_toBottomOf="@+id/emptyPlaylistsImage"
-        style="@style/MusicLibraryText"/>
+        app:layout_constraintTop_toBottomOf="@+id/emptyPlaylistsImage" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/savedTracksRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/none"
+        android:paddingLeft="@dimen/padding_12"
+        android:paddingTop="@dimen/padding_24"
+        android:paddingRight="@dimen/padding_12"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

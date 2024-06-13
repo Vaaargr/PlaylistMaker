@@ -1,6 +1,11 @@
-package com.example.playlistmaker.search.presentation.model
+package com.example.playlistmaker.musicLibrary.data.entity
 
-data class TrackForView(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "saved_track_table")
+data class TrackEntity(
+    @PrimaryKey(autoGenerate = true)
     var id: Long?,
     val trackName: String,
     val artistName: String,
@@ -11,7 +16,5 @@ data class TrackForView(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String,
-    val artworkUrl512: String?,
-    val trackTimeString: String
+    val previewUrl: String
 )

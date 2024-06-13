@@ -1,17 +1,17 @@
-package com.example.playlistmaker.search.presentation.ui
+package com.example.playlistmaker.musicLibrary.presentation.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackViewBinding
-import com.example.playlistmaker.tools.GlideClient
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.tools.Formatter
+import com.example.playlistmaker.tools.GlideClient
 
-class TrackViewHolder(private val item: View, private val roundingRadius: Int) : RecyclerView.ViewHolder(item) {
+class SavedTracksViewHolder (private val item: View, private val roundingRadius: Int) : RecyclerView.ViewHolder(item) {
     private val binding = TrackViewBinding.bind(item)
     private val imageLoader = GlideClient()
 
-    fun bind(track: TrackForView, onClickListener: TrackClickListener) {
+    fun bind(track: TrackForView, onClickListener: SavedTrackClickListener) {
         item.setOnClickListener {
             onClickListener.clickOnTrack(track)
         }

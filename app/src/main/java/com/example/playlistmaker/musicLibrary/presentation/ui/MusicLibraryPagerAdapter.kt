@@ -13,8 +13,8 @@ class MusicLibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Life
 
     override fun createFragment(position: Int): Fragment {
        return when (position){
-           0 -> EmptyTracksFragment.newInstance()
-           else -> EmptyPlaylistsFragment.newInstance()
+           0 -> TracksLibraryFragment.newInstance()
+           else -> PlaylistsLibraryFragment.newInstance()
        }
     }
 

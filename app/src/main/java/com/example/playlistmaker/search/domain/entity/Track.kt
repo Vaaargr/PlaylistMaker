@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.domain.entity
 
 data class Track(
+    var id: Long?,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,

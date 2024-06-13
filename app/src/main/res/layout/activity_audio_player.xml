@@ -109,7 +109,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/play_button"
         app:layout_constraintEnd_toStartOf="@+id/right_first_guideline"
         app:layout_constraintTop_toTopOf="@+id/play_button"
-        app:srcCompat="@drawable/heart" />
+        app:srcCompat="@drawable/unsaved_heart" />
 
     <TextView
         android:id="@+id/timer_text"

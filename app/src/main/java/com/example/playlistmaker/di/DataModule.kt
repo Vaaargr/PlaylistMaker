@@ -2,7 +2,10 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.example.playlistmaker.R
+import com.example.playlistmaker.musicLibrary.data.database.TrackDatabase
+import com.example.playlistmaker.musicLibrary.data.mapper.EntityMapper
 import com.example.playlistmaker.player.data.clientIterfaces.PlayerClient
 import com.example.playlistmaker.player.data.clientIterfaces.ReceiveTrackLocalClient
 import com.example.playlistmaker.player.data.clients.ReceiveTrackShPrefsClient
@@ -14,6 +17,8 @@ import com.example.playlistmaker.search.data.clients.network.ITunesSearchApi
 import com.example.playlistmaker.search.data.clients.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.clients.sharedPrefs.SearchHistoryShPrefsClient
 import com.example.playlistmaker.search.data.clients.sharedPrefs.SendTrackShPrefsClient
+import com.example.playlistmaker.search.data.mapper.ResponseMapper
+import com.example.playlistmaker.search.data.mapper.TrackDtoMapper
 import com.example.playlistmaker.settings.data.clientInterfaces.SettingsClient
 import com.example.playlistmaker.settings.data.clients.SettingsShPrefClient
 import com.example.playlistmaker.sharing.data.clients.ExternalNavigatorClientImpl
@@ -94,4 +99,15 @@ val dataModule = module {
     factory<PlayerClient> {
         MediaPlayerClient(get())
     }
+
+    single {
+        Room.databaseBuilder(androidContext(), TrackDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration().build()
+    }
+
+    factory { EntityMapper() }
+
+    factory { TrackDtoMapper() }
+
+    factory { ResponseMapper(get()) }
 }
