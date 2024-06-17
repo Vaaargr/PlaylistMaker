@@ -20,12 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
 
-    companion object {
-        fun newInstance(): TracksLibraryFragment {
-            return TracksLibraryFragment()
-        }
-    }
-
     private var _binding: TracksLibraryFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -93,5 +87,11 @@ class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
 
         val intent = Intent(context, AudioPlayerActivity::class.java)
         startActivity(intent)
+    }
+
+    companion object {
+        fun newInstance(): TracksLibraryFragment {
+            return TracksLibraryFragment()
+        }
     }
 }

@@ -16,11 +16,11 @@ class TrackViewHolder(private val item: View, private val roundingRadius: Int) :
             onClickListener.clickOnTrack(track)
         }
         with(binding) {
-            trackName.text = track.trackName
-            artistName.text = track.artistName
-            trackTime.text = Formatter.timeFormat(track.trackTimeMillis)
+            trackViewTrackName.text = track.trackName
+            trackArtistName.text = track.artistName
+            trackViewTrackTime.text = Formatter.timeFormat(track.trackTimeMillis)
 
-            imageLoader.loadImage(itemView.context, track.artworkUrl100, roundingRadius, albumImage)
+            imageLoader.loadImage(itemView.context, track.artworkUrl100, roundingRadius, trackAlbumImage)
         }
     }
 }

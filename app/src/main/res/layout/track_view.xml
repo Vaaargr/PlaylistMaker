@@ -12,7 +12,7 @@
 
 
     <ImageView
-        android:id="@+id/albumImage"
+        android:id="@+id/track_album_image"
         android:layout_width="@dimen/search_image_size"
         android:layout_height="@dimen/search_image_size"
         android:src="@drawable/placeholder"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/rightArrow"
+        android:id="@+id/track_right_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,43 +31,43 @@
         app:tint="?attr/search_activity_another_text_color" />
 
     <TextView
-        android:id="@+id/trackName"
+        android:id="@+id/track_view_track_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Track name"
         style="@style/TrackNameText"
-        app:layout_constraintEnd_toStartOf="@+id/rightArrow"
-        app:layout_constraintStart_toEndOf="@+id/albumImage"
+        app:layout_constraintEnd_toStartOf="@+id/track_right_arrow"
+        app:layout_constraintStart_toEndOf="@+id/track_album_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/doteSeparator"
+        android:id="@+id/track_dote_separator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/small_circle"
-        app:layout_constraintBottom_toBottomOf="@+id/artistName"
-        app:layout_constraintStart_toEndOf="@+id/artistName"
-        app:layout_constraintTop_toTopOf="@+id/artistName"
+        app:layout_constraintBottom_toBottomOf="@+id/track_artist_name"
+        app:layout_constraintStart_toEndOf="@+id/track_artist_name"
+        app:layout_constraintTop_toTopOf="@+id/track_artist_name"
         app:tint="?attr/search_activity_another_text_color" />
 
     <TextView
-        android:id="@+id/artistName"
+        android:id="@+id/track_artist_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TrackAnotherText"
         android:text="Artist name"
-        app:layout_constraintStart_toStartOf="@+id/trackName"
-        app:layout_constraintTop_toBottomOf="@+id/trackName" />
+        app:layout_constraintStart_toStartOf="@+id/track_view_track_name"
+        app:layout_constraintTop_toBottomOf="@+id/track_view_track_name" />
 
     <TextView
-        android:id="@+id/trackTime"
+        android:id="@+id/track_view_track_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         style="@style/TrackAnotherText"
         android:text="Track time"
-        app:layout_constraintBottom_toBottomOf="@+id/artistName"
-        app:layout_constraintEnd_toEndOf="@+id/trackName"
-        app:layout_constraintStart_toEndOf="@+id/doteSeparator"
-        app:layout_constraintTop_toTopOf="@+id/artistName" />
+        app:layout_constraintBottom_toBottomOf="@+id/track_artist_name"
+        app:layout_constraintEnd_toEndOf="@+id/track_view_track_name"
+        app:layout_constraintStart_toEndOf="@+id/track_dote_separator"
+        app:layout_constraintTop_toTopOf="@+id/track_artist_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

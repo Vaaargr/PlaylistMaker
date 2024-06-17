@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/emptyPlaylistsImage"
+        android:id="@+id/empty_playlists_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_106"
@@ -16,15 +16,15 @@
         app:srcCompat="@drawable/empty_search" />
 
     <TextView
-        android:id="@+id/emptyPlaylistsText"
+        android:id="@+id/empty_playlists_text"
         style="@style/MusicLibraryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
         android:text="@string/empty_track_library"
-        app:layout_constraintEnd_toEndOf="@+id/emptyPlaylistsImage"
-        app:layout_constraintStart_toStartOf="@+id/emptyPlaylistsImage"
-        app:layout_constraintTop_toBottomOf="@+id/emptyPlaylistsImage" />
+        app:layout_constraintEnd_toEndOf="@+id/empty_playlists_image"
+        app:layout_constraintStart_toStartOf="@+id/empty_playlists_image"
+        app:layout_constraintTop_toBottomOf="@+id/empty_playlists_image" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/savedTracksRecycler"
