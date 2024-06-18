@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.presentation
+package com.example.playlistmaker.player.presentation.states
 
 sealed class PlayerState(val buttonState: Boolean) {
     class DEFAULT : PlayerState(false)

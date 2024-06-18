@@ -1,5 +1,9 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.musicLibrary.data.repositorys.ForPlayerDatabaseRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.TrackLibraryRepositoryImpl
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.ForPlayerDatabaseRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.TracksLibraryRepository
 import com.example.playlistmaker.player.data.repositorys.PlayerRepositoryImpl
 import com.example.playlistmaker.player.data.repositorys.ReceiveTrackUseCaseRepositoryImpl
 import com.example.playlistmaker.player.domain.api.repositorys.PlayerRepository
@@ -32,15 +36,15 @@ val repositoryModule = module {
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get())
+        SearchHistoryRepositoryImpl(get(), get())
     }
 
     single<SearchTrackRepository> {
-        SearchTrackRepositoryImpl(get())
+        SearchTrackRepositoryImpl(get(), get())
     }
 
     single<SendTrackRepository> {
-        SendTrackRepositoryImpl(get())
+        SendTrackRepositoryImpl(get(), get())
     }
 
     factory<PlayerRepository> {
@@ -48,6 +52,14 @@ val repositoryModule = module {
     }
 
     factory<ReceiveTrackUseCaseRepository> {
-        ReceiveTrackUseCaseRepositoryImpl(get())
+        ReceiveTrackUseCaseRepositoryImpl(get(), get())
+    }
+
+    single<ForPlayerDatabaseRepository> {
+        ForPlayerDatabaseRepositoryImpl(get(), get())
+    }
+
+    single<TracksLibraryRepository> {
+        TrackLibraryRepositoryImpl(get(), get())
     }
 }

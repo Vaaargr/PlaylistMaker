@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.domainModule
+import com.example.playlistmaker.di.presentationModule
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
@@ -19,7 +20,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, domainModule, repositoryModule, viewModelModule)
+            modules(dataModule, domainModule, repositoryModule, viewModelModule, presentationModule)
         }
 
         shPref =

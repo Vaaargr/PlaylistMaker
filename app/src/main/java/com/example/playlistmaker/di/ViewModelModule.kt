@@ -1,7 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.EmptyPlaylistsFragmentViewModel
-import com.example.playlistmaker.musicLibrary.presentation.viewModel.EmptyTracksFragmentViewModel
+import com.example.playlistmaker.musicLibrary.presentation.viewModel.TracksLibraryFragmentViewModel
 import com.example.playlistmaker.player.presentation.viewModel.PlayerViewModel
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
 import com.example.playlistmaker.settings.presentation.viewModel.SettingsViewModel
@@ -14,15 +14,15 @@ val viewModelModule = module {
     }
 
     viewModel {
-        SearchingViewModel(get(), get(), get())
+        SearchingViewModel(get(), get(), get(), get(), get())
     }
 
     viewModel {
-        PlayerViewModel(get(), get())
+        PlayerViewModel(get(), get(), get(), get())
     }
 
     viewModel {
-        EmptyTracksFragmentViewModel()
+        TracksLibraryFragmentViewModel(get(), get(), get())
     }
 
     viewModel {

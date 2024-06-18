@@ -5,10 +5,13 @@ import com.example.playlistmaker.search.data.mapper.TrackDtoMapper
 import com.example.playlistmaker.search.domain.api.repositorys.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.entity.Track
 
-class SearchHistoryRepositoryImpl(private val searchHistoryClient: SearchHistoryClient):
+class SearchHistoryRepositoryImpl(
+    private val searchHistoryClient: SearchHistoryClient,
+    private val trackMapper: TrackDtoMapper
+) :
     SearchHistoryRepository {
     override fun getHistory(): ArrayList<Track> {
-        return TrackDtoMapper.trackDtoArrayToTrackArrayMap(searchHistoryClient.getHistory())
+        return trackMapper.trackDtoArrayToTrackArrayMap(searchHistoryClient.getHistory())
     }
 
     override fun clearHistory() {
@@ -16,6 +19,6 @@ class SearchHistoryRepositoryImpl(private val searchHistoryClient: SearchHistory
     }
 
     override fun saveHistory(inputHistory: ArrayList<Track>) {
-        searchHistoryClient.saveHistory(TrackDtoMapper.trackArrayToTrackDtoArrayMap(inputHistory))
+        searchHistoryClient.saveHistory(trackMapper.trackArrayToTrackDtoArrayMap(inputHistory))
     }
 }

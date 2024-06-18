@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.presentation.model
 
 data class TrackForView(
+    var id: Long?,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,

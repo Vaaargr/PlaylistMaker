@@ -13,14 +13,15 @@ import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchingViewModel(
     private val sendTrackUseCase: SendTrackUseCase,
     private val searchTrackUseCase: SearchTrackUseCase,
-    private val searchHistory: SearchHistoryInteractor
+    private val searchHistory: SearchHistoryInteractor,
+    private val trackViewMapper: TrackViewMapper,
+    private val searchResponseMapper: SearchResponseMapper
 ) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<SearchActivityState>(
@@ -71,7 +72,7 @@ class SearchingViewModel(
 
             searchTrackUseCase.execute(getRequest() ?: "")
                 .collect { searchResponse ->
-                    setState(SearchResponseMapper.map(searchResponse))
+                    setState(searchResponseMapper.map(searchResponse))
                 }
         }
     }
@@ -80,7 +81,7 @@ class SearchingViewModel(
         val history = searchHistory.getHistory()
         if (history.isNotEmpty()) {
             setState(SearchActivityState.History(history.map {
-                TrackViewMapper.trackToTrackForViewMap(
+                trackViewMapper.trackToTrackForViewMap(
                     it
                 )
             }))
@@ -88,7 +89,7 @@ class SearchingViewModel(
     }
 
     fun saveTrack(track: TrackForView) {
-        searchHistory.saveTrack(TrackViewMapper.trackForViewToTrackMap(track))
+        searchHistory.saveTrack(trackViewMapper.trackForViewToTrackMap(track))
     }
 
     fun clearHistory() {
@@ -102,6 +103,6 @@ class SearchingViewModel(
     }
 
     fun sendTrack(track: TrackForView) {
-        sendTrackUseCase.execute(TrackViewMapper.trackForViewToTrackMap(track))
+        sendTrackUseCase.execute(trackViewMapper.trackForViewToTrackMap(track))
     }
 }

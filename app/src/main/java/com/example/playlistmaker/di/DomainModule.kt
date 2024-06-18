@@ -1,7 +1,11 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.ReceiveSavedTracksUseCase
+import com.example.playlistmaker.musicLibrary.domain.impl.ReceiveSavedTracksUseCaseImpl
+import com.example.playlistmaker.player.domain.api.interactors.PlayerDatabaseInteractor
 import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
+import com.example.playlistmaker.player.domain.impl.PlayerDatabaseInteractorImpl
 import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.player.domain.impl.ReceiveTrackUseCaseImpl
 import com.example.playlistmaker.search.domain.api.interactors.SearchHistoryInteractor
@@ -44,5 +48,13 @@ val domainModule = module {
 
     factory<ReceiveTrackUseCase> {
         ReceiveTrackUseCaseImpl(get())
+    }
+
+    factory<PlayerDatabaseInteractor> {
+        PlayerDatabaseInteractorImpl(get())
+    }
+
+    factory<ReceiveSavedTracksUseCase> {
+        ReceiveSavedTracksUseCaseImpl(get())
     }
 }

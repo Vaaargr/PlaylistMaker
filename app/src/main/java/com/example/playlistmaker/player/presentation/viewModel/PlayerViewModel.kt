@@ -4,19 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.player.domain.api.interactors.PlayerDatabaseInteractor
 import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
-import com.example.playlistmaker.player.presentation.PlayerState
+import com.example.playlistmaker.player.presentation.states.PlayerState
+import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val player: PlayerInteractor,
-    private val receive: ReceiveTrackUseCase
+    private val receive: ReceiveTrackUseCase,
+    private val playerDBInteractor: PlayerDatabaseInteractor,
+    private val mapper: TrackViewMapper
 ) : ViewModel() {
     private var timerJob: Job? = null
 
@@ -28,13 +31,16 @@ class PlayerViewModel(
     private val playerStateLiveData: MutableLiveData<PlayerState> =
         MutableLiveData(PlayerState.DEFAULT())
 
+    private val savedTrackStateLiveData = MutableLiveData<SavedTrackState>()
+
     private fun setTrack(track: TrackForView) {
         trackLiveData.value = track
     }
 
     init {
-        setTrack(TrackViewMapper.trackToTrackForViewMap(receive.execute()))
+        setTrack(mapper.trackToTrackForViewMap(receive.execute()))
         preparePlayer(getTrack().previewUrl)
+        checkTrack()
     }
 
     private fun setTimer(timer: Int) {
@@ -43,6 +49,10 @@ class PlayerViewModel(
 
     private fun setState(state: PlayerState) {
         playerStateLiveData.postValue(state)
+    }
+
+    private fun setSavedTrackState(stState: SavedTrackState) {
+        savedTrackStateLiveData.postValue(stState)
     }
 
     fun getTrack(): TrackForView {
@@ -59,6 +69,10 @@ class PlayerViewModel(
 
     private fun getState(): PlayerState {
         return getPlayerState().value!!
+    }
+
+    fun getSavedTrackState(): LiveData<SavedTrackState> {
+        return savedTrackStateLiveData
     }
 
     fun playStopButtonClick() {
@@ -110,6 +124,37 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         releasePlayer()
+    }
+
+    private fun checkTrack() {
+        viewModelScope.launch {
+            if (playerDBInteractor.checkTrack(trackLiveData.value!!.trackId)) {
+                setSavedTrackState(SavedTrackState.savedTrack)
+            } else {
+                setSavedTrackState(SavedTrackState.unsavedTrack)
+            }
+        }
+    }
+
+    fun lickButtonClick(){
+        when(savedTrackStateLiveData.value!!){
+            SavedTrackState.savedTrack -> deleteTrack()
+            SavedTrackState.unsavedTrack -> saveTrack()
+        }
+    }
+
+    private fun saveTrack() {
+        viewModelScope.launch {
+            playerDBInteractor.saveTrack(mapper.trackForViewToTrackMap(trackLiveData.value!!))
+            setSavedTrackState(SavedTrackState.savedTrack)
+        }
+    }
+
+    private fun deleteTrack(){
+        viewModelScope.launch {
+            playerDBInteractor.deleteTrack(trackLiveData.value!!.trackId)
+            setSavedTrackState(SavedTrackState.unsavedTrack)
+        }
     }
 
     companion object {
