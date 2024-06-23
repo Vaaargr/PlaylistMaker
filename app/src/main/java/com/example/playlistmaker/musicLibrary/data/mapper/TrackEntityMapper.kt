@@ -3,7 +3,7 @@ package com.example.playlistmaker.musicLibrary.data.mapper
 import com.example.playlistmaker.musicLibrary.data.entity.TrackEntity
 import com.example.playlistmaker.search.domain.entity.Track
 
-class EntityMapper {
+class TrackEntityMapper {
 
     fun entityToTrackMap(entity: TrackEntity): Track {
         return Track(

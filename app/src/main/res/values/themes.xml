@@ -34,6 +34,24 @@
     <attr name="music_library_tab_background"/>
     <attr name="music_library_tab_text_color"/>
 
+    <attr name="new_playlist_fragment_hint_color_normal"/>
+    <attr name="new_playlist_fragment_hint_color_active"/>
+    <attr name="new_playlist_fragment_button_enable"/>
+    <attr name="new_playlist_fragment_button_disable"/>
+    <attr name="new_playlist_fragment_border_color_inactive"/>
+    <attr name="new_playlist_fragment_border_color_active"/>
+
+    <attr name="playlist_view_text_color"/>
+
+    <attr name="handle_color"/>
+
+    <attr name="playlist_player_name_color"/>
+    <attr name="playlist_player_count_color"/>
+
+    <attr name="toast_background_color"/>
+    <attr name="toast_text_color"/>
+
+
 
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
@@ -73,6 +91,23 @@
         <item name="music_library_button_text_color">@color/white</item>
         <item name="music_library_tab_background">@color/white</item>
         <item name="music_library_tab_text_color">@color/black</item>
+
+        <item name="new_playlist_fragment_hint_color_normal">@color/black</item>
+        <item name="new_playlist_fragment_hint_color_active">@color/blue</item>
+        <item name="new_playlist_fragment_button_enable">@color/blue</item>
+        <item name="new_playlist_fragment_button_disable">@color/gray</item>
+        <item name="new_playlist_fragment_border_color_inactive">@color/gray</item>
+        <item name="new_playlist_fragment_border_color_active">@color/blue</item>
+
+        <item name="playlist_view_text_color">@color/black</item>
+
+        <item name="handle_color">@color/light_gray</item>
+
+        <item name="playlist_player_name_color">@color/very_black</item>
+        <item name="playlist_player_count_color">@color/gray</item>
+
+        <item name="toast_background_color">@color/black</item>
+        <item name="toast_text_color">@color/white</item>
     </style>
 </resources>
 

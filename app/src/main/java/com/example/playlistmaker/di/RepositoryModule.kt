@@ -1,8 +1,14 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.musicLibrary.data.repositorys.ForPlayerDatabaseRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.PlaylistLibraryRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.SavePlaylistRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.SaveTrackInPlaylistRepositoryImpl
 import com.example.playlistmaker.musicLibrary.data.repositorys.TrackLibraryRepositoryImpl
 import com.example.playlistmaker.musicLibrary.domain.api.repositorys.ForPlayerDatabaseRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.PlaylistLibraryRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.SavePlaylistRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.SaveTrackInPlaylistRepository
 import com.example.playlistmaker.musicLibrary.domain.api.repositorys.TracksLibraryRepository
 import com.example.playlistmaker.player.data.repositorys.PlayerRepositoryImpl
 import com.example.playlistmaker.player.data.repositorys.ReceiveTrackUseCaseRepositoryImpl
@@ -61,5 +67,17 @@ val repositoryModule = module {
 
     single<TracksLibraryRepository> {
         TrackLibraryRepositoryImpl(get(), get())
+    }
+
+    single<SavePlaylistRepository> {
+        SavePlaylistRepositoryImpl(get(), get())
+    }
+
+    single<PlaylistLibraryRepository>{
+        PlaylistLibraryRepositoryImpl(get(), get())
+    }
+
+    single<SaveTrackInPlaylistRepository> {
+        SaveTrackInPlaylistRepositoryImpl(get(), get())
     }
 }

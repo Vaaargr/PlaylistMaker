@@ -13,15 +13,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.presentation.model.TrackForView
-import com.example.playlistmaker.player.presentation.ui.AudioPlayerActivity
+import com.example.playlistmaker.player.presentation.ui.AudioPlayerFragment
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -70,8 +70,6 @@ class SearchFragment : Fragment(), TrackClickListener {
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             implementState(state)
         }
-
-
 
         with(binding) {
             searchRecycler.layoutManager = LinearLayoutManager(context)
@@ -141,6 +139,11 @@ class SearchFragment : Fragment(), TrackClickListener {
                 hideHistory()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
     }
 
     private fun search(searchDelay: Long) {
@@ -239,8 +242,7 @@ class SearchFragment : Fragment(), TrackClickListener {
             viewModel.saveTrack(track)
             viewModel.sendTrack(track)
 
-            val intent = Intent(context, AudioPlayerActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment)
         }
     }
 

@@ -35,4 +35,22 @@
     <string name="new_playlist">New playlist</string>
     <string name="featured_tracks">Featured tracks</string>
     <string name="playlists">Playlists</string>
+    <string name="name">Name*</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="new_playlist_finish">Finish creating a playlist?</string>
+    <string name="new_playlist_warning">All unsaved data will be lost.</string>
+    <string name="cancel">Cancel</string>
+    <string name="complete">Complete</string>
+    <string name="permission_rationale">Permission to access media files is required to select a playlist cover.</string>
+    <string name="np_message_begin">Playlist</string>
+    <string name="np_message_end">created.</string>
+    <string name="track_match">track</string>
+    <string name="track_unmatch">track</string>
+    <string name="tracks_match_a">tracks</string>
+    <string name="tracks_match_b">tracks</string>
+    <string name="tracks_unmatch">tracks</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="track_already_added">The track has already been added to the playlist</string>
+    <string name="added_to_playlist">Added to playlist</string>
 </resources>

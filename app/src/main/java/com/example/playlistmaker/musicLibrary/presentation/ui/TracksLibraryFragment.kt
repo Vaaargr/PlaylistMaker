@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TracksLibraryFragmentBinding
@@ -14,7 +15,7 @@ import com.example.playlistmaker.musicLibrary.presentation.adapter.SavedTrackCli
 import com.example.playlistmaker.musicLibrary.presentation.adapter.SavedTracksRecyclerAdapter
 import com.example.playlistmaker.musicLibrary.presentation.states.TracksLibraryState
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.TracksLibraryFragmentViewModel
-import com.example.playlistmaker.player.presentation.ui.AudioPlayerActivity
+import com.example.playlistmaker.player.presentation.ui.AudioPlayerFragment
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
@@ -85,8 +86,7 @@ class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
     override fun clickOnTrack(track: TrackForView) {
         viewModel.sendTrack(track)
 
-        val intent = Intent(context, AudioPlayerActivity::class.java)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_musicLibraryFragment_to_audioPlayerFragment)
     }
 
     companion object {

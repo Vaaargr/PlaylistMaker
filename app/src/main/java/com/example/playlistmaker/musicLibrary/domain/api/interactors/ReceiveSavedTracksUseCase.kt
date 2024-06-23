@@ -4,5 +4,5 @@ import com.example.playlistmaker.search.domain.entity.Track
 import kotlinx.coroutines.flow.Flow
 
 interface ReceiveSavedTracksUseCase {
-    suspend fun execute(): Flow<List<Track>>
+    fun execute(): Flow<List<Track>>
 }

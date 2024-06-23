@@ -5,7 +5,9 @@ import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.R
 import com.example.playlistmaker.musicLibrary.data.database.TrackDatabase
-import com.example.playlistmaker.musicLibrary.data.mapper.EntityMapper
+import com.example.playlistmaker.musicLibrary.data.mapper.PlaylistsEntityMapper
+import com.example.playlistmaker.musicLibrary.data.mapper.TrackEntityMapper
+import com.example.playlistmaker.musicLibrary.data.mapper.TracksInPlaylistsEntityMapper
 import com.example.playlistmaker.player.data.clientIterfaces.PlayerClient
 import com.example.playlistmaker.player.data.clientIterfaces.ReceiveTrackLocalClient
 import com.example.playlistmaker.player.data.clients.ReceiveTrackShPrefsClient
@@ -105,9 +107,13 @@ val dataModule = module {
             .fallbackToDestructiveMigration().build()
     }
 
-    factory { EntityMapper() }
+    factory { TrackEntityMapper() }
 
     factory { TrackDtoMapper() }
 
     factory { ResponseMapper(get()) }
+
+    factory { PlaylistsEntityMapper(get()) }
+
+    factory { TracksInPlaylistsEntityMapper() }
 }
