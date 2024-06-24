@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.AudioPlayerFragmentBinding
 import com.example.playlistmaker.player.presentation.adapter.PlaylistsPlayerRecyclerAdapter
-import com.example.playlistmaker.player.presentation.states.PlaylistsPlayerState
 import com.example.playlistmaker.player.presentation.states.SaveTrackInPlaylistState
 import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.tools.GlideClient
@@ -41,7 +40,6 @@ class AudioPlayerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.releasePlayer()
         _binding = null
     }
 
@@ -79,14 +77,7 @@ class AudioPlayerFragment : Fragment() {
         }
 
         viewModel.observePlaylistState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is PlaylistsPlayerState.Content -> {
-                    playlistStateHandle(true)
-                    adapter!!.add(state.playlists)
-                }
-
-                PlaylistsPlayerState.Empty -> playlistStateHandle(false)
-            }
+            adapter!!.add(state)
         }
 
         viewModel.observeSaveTrackInPlaylist().observe(viewLifecycleOwner) { state ->
@@ -182,11 +173,5 @@ class AudioPlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.playerPause()
-    }
-
-    private fun playlistStateHandle(state: Boolean) {
-        binding.emptyPlaylistsPlayerText.isVisible = !state
-        binding.emptyPlaylistsPlayerImage.isVisible = !state
-        binding.playlistsRecyclerPlayer.isVisible = state
     }
 }

@@ -283,25 +283,6 @@
             android:layout_gravity="center"
             />
 
-        <ImageView
-            android:id="@+id/empty_playlists_player_image"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_46"
-            app:srcCompat="@drawable/empty_search"
-            android:visibility="visible"/>
-
-        <TextView
-            android:id="@+id/empty_playlists_player_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text= "@string/empty_playlists_library"
-            android:layout_marginTop="@dimen/margin_16"
-            style="@style/MusicLibraryText"
-            android:visibility="visible"
-            />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlists_recycler_player"
             android:layout_width="match_parent"

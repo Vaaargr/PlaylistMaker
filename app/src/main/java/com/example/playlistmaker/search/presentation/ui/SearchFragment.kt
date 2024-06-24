@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.presentation.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.presentation.model.TrackForView
-import com.example.playlistmaker.player.presentation.ui.AudioPlayerFragment
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
@@ -60,8 +58,6 @@ class SearchFragment : Fragment(), TrackClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.checkHistory()
-
         responseAdapter = SearchRecyclerAdapter(
             this,
             resources.getDimensionPixelOffset(R.dimen.small_corner_radius)
@@ -69,6 +65,10 @@ class SearchFragment : Fragment(), TrackClickListener {
 
         viewModel.getState().observe(viewLifecycleOwner) { state ->
             implementState(state)
+        }
+
+        viewModel.observeShowProgressBarLD().observe(viewLifecycleOwner) {
+            showProgressBar(it)
         }
 
         with(binding) {
@@ -80,7 +80,8 @@ class SearchFragment : Fragment(), TrackClickListener {
             clearButton.setOnClickListener {
                 queryInput.setText("")
                 viewModel.clearRequest()
-                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(queryInput.windowToken, 0)
                 queryInput.clearFocus()
                 responseAdapter?.clearList()
@@ -105,7 +106,6 @@ class SearchFragment : Fragment(), TrackClickListener {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (viewModel.changeRequest(s.toString())) {
                         binding.clearButton.isVisible = true
-                        hideHistory()
                         search(SEARCH_DELAY_MILLIS)
                     } else if (s.isNullOrEmpty()) {
                         binding.clearButton.isVisible = false
@@ -146,8 +146,13 @@ class SearchFragment : Fragment(), TrackClickListener {
         isClickAllowed = true
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.checkHistory()
+
+    }
+
     private fun search(searchDelay: Long) {
-        showProgressBar(true)
         viewModel.search(searchDelay)
     }
 
@@ -219,6 +224,7 @@ class SearchFragment : Fragment(), TrackClickListener {
     }
 
     private fun showHistory(history: List<TrackForView>) {
+        showProgressBar(false)
         setSearchHistoryVisibility(true)
         responseAdapter?.add(history)
     }
@@ -229,6 +235,7 @@ class SearchFragment : Fragment(), TrackClickListener {
 
     private fun setSearchHistoryVisibility(input: Boolean) {
         with(binding) {
+            searchRecycler.isVisible = input
             searchHistoryText.isVisible = input
             clearSearchHistoryButton.isVisible = input
             if (!input) {
@@ -259,6 +266,9 @@ class SearchFragment : Fragment(), TrackClickListener {
     }
 
     private fun showProgressBar(input: Boolean) {
+        if (input) {
+            hideHistory()
+        }
         with(binding) {
             progressBar.isVisible = input
             searchRecycler.isVisible = false

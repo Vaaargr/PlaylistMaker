@@ -13,7 +13,6 @@ import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
 import com.example.playlistmaker.player.presentation.adapter.PlaylistClickListener
 import com.example.playlistmaker.player.presentation.states.PlayerState
-import com.example.playlistmaker.player.presentation.states.PlaylistsPlayerState
 import com.example.playlistmaker.player.presentation.states.SaveTrackInPlaylistState
 import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
@@ -45,7 +44,7 @@ class PlayerViewModel(
     private val savedTrackStateLiveData = MutableLiveData<SavedTrackState>()
 
     private val playlistStateLiveData =
-        MutableLiveData<PlaylistsPlayerState>(PlaylistsPlayerState.Empty)
+        MutableLiveData<List<PlaylistForView>>(emptyList())
 
     private val saveTrackInPlaylistLiveData = MutableLiveData<SaveTrackInPlaylistState>()
 
@@ -71,8 +70,8 @@ class PlayerViewModel(
         savedTrackStateLiveData.postValue(stState)
     }
 
-    private fun setPlaylistState(state: PlaylistsPlayerState) {
-        playlistStateLiveData.postValue(state)
+    private fun setPlaylistState(playlists: List<PlaylistForView>) {
+        playlistStateLiveData.postValue(playlists)
     }
 
     fun getTrack(): TrackForView {
@@ -95,7 +94,7 @@ class PlayerViewModel(
         return savedTrackStateLiveData
     }
 
-    fun observePlaylistState(): LiveData<PlaylistsPlayerState> = playlistStateLiveData
+    fun observePlaylistState(): LiveData<List<PlaylistForView>> = playlistStateLiveData
 
     fun observeSaveTrackInPlaylist(): LiveData<SaveTrackInPlaylistState> =
         saveTrackInPlaylistLiveData
@@ -127,9 +126,11 @@ class PlayerViewModel(
     }
 
     fun playerPause() {
-        player.pause()
-        timerJob?.cancel()
-        setState(PlayerState.PAUSED())
+        if (getState() is PlayerState.PLAYING) {
+            player.pause()
+            timerJob?.cancel()
+            setState(PlayerState.PAUSED())
+        }
     }
 
     private fun preparePlayer(url: String) {
@@ -145,7 +146,7 @@ class PlayerViewModel(
         player.preparePlayer(url, onPreparedListener, onCompletionListener)
     }
 
-    fun releasePlayer() {
+    private fun releasePlayer() {
         timerJob?.cancel()
         player.release()
     }
@@ -190,13 +191,13 @@ class PlayerViewModel(
         viewModelScope.launch {
             playlistLibraryInteractor.getSavedPlaylists().collect { playlists ->
                 if (playlists.isEmpty()) {
-                    setPlaylistState(PlaylistsPlayerState.Empty)
+                    setPlaylistState(emptyList<PlaylistForView>())
                 } else {
-                    setPlaylistState(PlaylistsPlayerState.Content(playlists.map {
+                    setPlaylistState(playlists.map {
                         playlistForViewMapper.playlistToPlaylistForView(
                             it
                         )
-                    }))
+                    })
                 }
             }
         }
