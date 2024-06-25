@@ -1,7 +1,13 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.PlaylistLibraryInteractor
 import com.example.playlistmaker.musicLibrary.domain.api.interactors.ReceiveSavedTracksUseCase
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.SavePlaylistUseCase
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.SaveTrackInPlaylistUseCase
+import com.example.playlistmaker.musicLibrary.domain.impl.PlaylistLibraryInteractorImpl
 import com.example.playlistmaker.musicLibrary.domain.impl.ReceiveSavedTracksUseCaseImpl
+import com.example.playlistmaker.musicLibrary.domain.impl.SavePlaylistUseCaseImpl
+import com.example.playlistmaker.musicLibrary.domain.impl.SaveTrackInPlaylistUseCaseImpl
 import com.example.playlistmaker.player.domain.api.interactors.PlayerDatabaseInteractor
 import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
@@ -56,5 +62,17 @@ val domainModule = module {
 
     factory<ReceiveSavedTracksUseCase> {
         ReceiveSavedTracksUseCaseImpl(get())
+    }
+
+    factory<SavePlaylistUseCase> {
+        SavePlaylistUseCaseImpl(get())
+    }
+
+    factory<PlaylistLibraryInteractor>{
+        PlaylistLibraryInteractorImpl(get())
+    }
+
+    factory<SaveTrackInPlaylistUseCase>{
+        SaveTrackInPlaylistUseCaseImpl(get())
     }
 }

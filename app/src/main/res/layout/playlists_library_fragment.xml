@@ -3,11 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/new_playlist_button"
         style="@style/MusicLibraryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,9 +24,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/new_playlist_button"
         android:layout_marginTop="@dimen/margin_46"
-        app:srcCompat="@drawable/empty_search" />
+        app:srcCompat="@drawable/empty_search"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/empty_playlists_text"
@@ -37,7 +39,20 @@
         app:layout_constraintStart_toStartOf="@+id/empty_playlists_image"
         app:layout_constraintTop_toBottomOf="@+id/empty_playlists_image"
         style="@style/MusicLibraryText"
-
+        android:visibility="gone"
         />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler"
+        android:layout_marginTop="@dimen/margin_8"
+        android:layout_marginStart="@dimen/margin_12"
+        android:layout_marginEnd="@dimen/margin_12"
+        android:layout_marginBottom="@dimen/margin_8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_playlist_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

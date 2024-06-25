@@ -35,9 +35,17 @@ class SearchingViewModel(
 
     private val requestLiveData = MutableLiveData<String>("")
 
+    private val showProgressBarLiveData = MutableLiveData(false)
+
     fun getState(): LiveData<SearchActivityState> = stateLiveData
 
     fun getRequest(): String? = requestLiveData.value
+
+    fun observeShowProgressBarLD() : LiveData<Boolean> = showProgressBarLiveData
+
+    private fun setShowProgressBarLD(input: Boolean){
+        showProgressBarLiveData.postValue(input)
+    }
 
     private fun setState(state: SearchActivityState) {
         stateLiveData.postValue(state)
@@ -69,6 +77,8 @@ class SearchingViewModel(
 
         searchJob = viewModelScope.launch {
             delay(searchDelay)
+
+            setShowProgressBarLD(true)
 
             searchTrackUseCase.execute(getRequest() ?: "")
                 .collect { searchResponse ->

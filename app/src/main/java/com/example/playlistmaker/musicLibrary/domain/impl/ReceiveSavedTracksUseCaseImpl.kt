@@ -5,8 +5,9 @@ import com.example.playlistmaker.musicLibrary.domain.api.repositorys.TracksLibra
 import com.example.playlistmaker.search.domain.entity.Track
 import kotlinx.coroutines.flow.Flow
 
-class ReceiveSavedTracksUseCaseImpl(private val tracksLibraryRepository: TracksLibraryRepository): ReceiveSavedTracksUseCase{
-    override suspend fun execute(): Flow<List<Track>> {
+class ReceiveSavedTracksUseCaseImpl(private val tracksLibraryRepository: TracksLibraryRepository) :
+    ReceiveSavedTracksUseCase {
+    override fun execute(): Flow<List<Track>> {
         return tracksLibraryRepository.getSavedTracks()
     }
 }

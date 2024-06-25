@@ -4,10 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.PlaylistLibraryInteractor
+import com.example.playlistmaker.musicLibrary.domain.api.interactors.SaveTrackInPlaylistUseCase
+import com.example.playlistmaker.musicLibrary.presentation.entity.PlaylistForView
+import com.example.playlistmaker.musicLibrary.presentation.mapper.PlaylistForViewMapper
 import com.example.playlistmaker.player.domain.api.interactors.PlayerDatabaseInteractor
 import com.example.playlistmaker.player.domain.api.interactors.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.interactors.ReceiveTrackUseCase
+import com.example.playlistmaker.player.presentation.adapter.PlaylistClickListener
 import com.example.playlistmaker.player.presentation.states.PlayerState
+import com.example.playlistmaker.player.presentation.states.SaveTrackInPlaylistState
 import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.TrackForView
@@ -19,8 +25,12 @@ class PlayerViewModel(
     private val player: PlayerInteractor,
     private val receive: ReceiveTrackUseCase,
     private val playerDBInteractor: PlayerDatabaseInteractor,
-    private val mapper: TrackViewMapper
-) : ViewModel() {
+    private val trackViewMapper: TrackViewMapper,
+    private val playlistLibraryInteractor: PlaylistLibraryInteractor,
+    private val playlistForViewMapper: PlaylistForViewMapper,
+    private val saveTrackInPlaylist: SaveTrackInPlaylistUseCase
+) : ViewModel(), PlaylistClickListener {
+
     private var timerJob: Job? = null
 
     private val trackLiveData =
@@ -33,12 +43,17 @@ class PlayerViewModel(
 
     private val savedTrackStateLiveData = MutableLiveData<SavedTrackState>()
 
+    private val playlistStateLiveData =
+        MutableLiveData<List<PlaylistForView>>(emptyList())
+
+    private val saveTrackInPlaylistLiveData = MutableLiveData<SaveTrackInPlaylistState>()
+
     private fun setTrack(track: TrackForView) {
         trackLiveData.value = track
     }
 
     init {
-        setTrack(mapper.trackToTrackForViewMap(receive.execute()))
+        setTrack(trackViewMapper.trackToTrackForViewMap(receive.execute()))
         preparePlayer(getTrack().previewUrl)
         checkTrack()
     }
@@ -53,6 +68,10 @@ class PlayerViewModel(
 
     private fun setSavedTrackState(stState: SavedTrackState) {
         savedTrackStateLiveData.postValue(stState)
+    }
+
+    private fun setPlaylistState(playlists: List<PlaylistForView>) {
+        playlistStateLiveData.postValue(playlists)
     }
 
     fun getTrack(): TrackForView {
@@ -73,6 +92,15 @@ class PlayerViewModel(
 
     fun getSavedTrackState(): LiveData<SavedTrackState> {
         return savedTrackStateLiveData
+    }
+
+    fun observePlaylistState(): LiveData<List<PlaylistForView>> = playlistStateLiveData
+
+    fun observeSaveTrackInPlaylist(): LiveData<SaveTrackInPlaylistState> =
+        saveTrackInPlaylistLiveData
+
+    private fun setSaveTrackInPlaylistState(state: SaveTrackInPlaylistState) {
+        saveTrackInPlaylistLiveData.postValue(state)
     }
 
     fun playStopButtonClick() {
@@ -98,9 +126,11 @@ class PlayerViewModel(
     }
 
     fun playerPause() {
-        player.pause()
-        timerJob?.cancel()
-        setState(PlayerState.PAUSED())
+        if (getState() is PlayerState.PLAYING) {
+            player.pause()
+            timerJob?.cancel()
+            setState(PlayerState.PAUSED())
+        }
     }
 
     private fun preparePlayer(url: String) {
@@ -129,31 +159,67 @@ class PlayerViewModel(
     private fun checkTrack() {
         viewModelScope.launch {
             if (playerDBInteractor.checkTrack(trackLiveData.value!!.trackId)) {
-                setSavedTrackState(SavedTrackState.savedTrack)
+                setSavedTrackState(SavedTrackState.SavedTrack)
             } else {
-                setSavedTrackState(SavedTrackState.unsavedTrack)
+                setSavedTrackState(SavedTrackState.UnsavedTrack)
             }
         }
     }
 
-    fun lickButtonClick(){
-        when(savedTrackStateLiveData.value!!){
-            SavedTrackState.savedTrack -> deleteTrack()
-            SavedTrackState.unsavedTrack -> saveTrack()
+    fun likeButtonClick() {
+        when (savedTrackStateLiveData.value!!) {
+            SavedTrackState.SavedTrack -> deleteTrack()
+            SavedTrackState.UnsavedTrack -> saveTrack()
         }
     }
 
     private fun saveTrack() {
         viewModelScope.launch {
-            playerDBInteractor.saveTrack(mapper.trackForViewToTrackMap(trackLiveData.value!!))
-            setSavedTrackState(SavedTrackState.savedTrack)
+            playerDBInteractor.saveTrack(trackViewMapper.trackForViewToTrackMap(trackLiveData.value!!))
+            setSavedTrackState(SavedTrackState.SavedTrack)
         }
     }
 
-    private fun deleteTrack(){
+    private fun deleteTrack() {
         viewModelScope.launch {
             playerDBInteractor.deleteTrack(trackLiveData.value!!.trackId)
-            setSavedTrackState(SavedTrackState.unsavedTrack)
+            setSavedTrackState(SavedTrackState.UnsavedTrack)
+        }
+    }
+
+    fun checkPlaylists() {
+        viewModelScope.launch {
+            playlistLibraryInteractor.getSavedPlaylists().collect { playlists ->
+                if (playlists.isEmpty()) {
+                    setPlaylistState(emptyList<PlaylistForView>())
+                } else {
+                    setPlaylistState(playlists.map {
+                        playlistForViewMapper.playlistToPlaylistForView(
+                            it
+                        )
+                    })
+                }
+            }
+        }
+    }
+
+    override fun clickOnPlaylist(playlist: PlaylistForView) {
+        if (playlist.tracksIDList.contains(getTrack().trackId)) {
+            setSaveTrackInPlaylistState(SaveTrackInPlaylistState.Failure(playlist.name))
+        } else {
+            val tracks = ArrayList<Int>(playlist.tracksIDList)
+            tracks.add(getTrack().trackId)
+            playlist.tracksIDList = tracks
+            playlist.tracksCount = playlist.tracksIDList.size
+            viewModelScope.launch {
+                playlistLibraryInteractor.updatePlaylist(
+                    playlistForViewMapper.playlistForViewToPlaylistMap(
+                        playlist
+                    )
+                )
+                saveTrackInPlaylist.execute(trackViewMapper.trackForViewToTrackMap(getTrack()))
+            }
+            setSaveTrackInPlaylistState(SaveTrackInPlaylistState.Success(playlist.name))
         }
     }
 

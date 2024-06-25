@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.presentation.states
 
 sealed class SavedTrackState {
 
-    object savedTrack: SavedTrackState()
+    object SavedTrack: SavedTrackState()
 
-    object unsavedTrack: SavedTrackState()
+    object UnsavedTrack: SavedTrackState()
 }

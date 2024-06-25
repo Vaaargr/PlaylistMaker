@@ -123,6 +123,31 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="PlaylistViewText" parent="MainText">
+        <item name="android:textSize">@dimen/text_12</item>
+        <item name="android:textColor">?attr/playlist_view_text_color</item>
+    </style>
+    
+    <style name="BottomSheetText" parent="MainText">
+        <item name="android:textSize">@dimen/text_19</item>
+        <item name="android:textColor">?attr/playlist_view_text_color</item>
+    </style>
+
+    <style name="PlaylistsNamePlayerText" parent="MainText">
+        <item name="android:textSize">@dimen/text_16</item>
+        <item name="android:textColor">?attr/playlist_player_name_color</item>
+    </style>
+
+    <style name="PlaylistsCountPlayerText" parent="MainText">
+        <item name="android:textSize">@dimen/text_11</item>
+        <item name="android:textColor">?attr/playlist_player_count_color</item>
+    </style>
+
+    <style name="ToastTextStyle" parent="MainText">
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textColor">?attr/toast_text_color</item>
+    </style>
+
     <style name="SearchActivitySecondaryButton">
         <item name="android:fontFamily">@font/ys_display</item>
         <item name="android:backgroundTint">?attr/search_activity_secondary_buttons_background
@@ -158,5 +183,20 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/text_14</item>
         <item name="tabIndicatorColor">?attr/music_library_tab_text_color</item>
+    </style>
+
+    <style name="NewPlaylistTextInputLayoutStyle" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColorHint">?attr/new_playlist_fragment_hint_color_normal</item>
+        <item name="boxStrokeColor">@color/text_input_outline_color</item>
+        <item name="hintTextColor">?attr/new_playlist_fragment_hint_color_active</item>
+        <item name="cursorColor">?attr/new_playlist_fragment_hint_color_active</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/text_16</item>
+    </style>
+
+    <style name="NewPlaylistButton">
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_16</item>
     </style>
 </resources>
