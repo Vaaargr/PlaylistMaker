@@ -8,7 +8,7 @@ import java.util.Locale
 class TrackViewMapper {
     fun trackToTrackForViewMap(track: Track): TrackForView {
         return TrackForView(
-            id = track.id,
+            innerID = track.innerID,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -23,13 +23,14 @@ class TrackViewMapper {
             trackTimeString = SimpleDateFormat(
                 "mm:ss",
                 Locale.getDefault()
-            ).format(track.trackTimeMillis)
+            ).format(track.trackTimeMillis),
+            isLiked = track.isLiked
         )
     }
 
     fun trackForViewToTrackMap(trackForView: TrackForView): Track {
         return Track(
-            id = trackForView.id,
+            innerID = trackForView.innerID,
             trackName = trackForView.trackName,
             artistName = trackForView.artistName,
             trackTimeMillis = trackForView.trackTimeMillis,
@@ -40,7 +41,8 @@ class TrackViewMapper {
             primaryGenreName = trackForView.primaryGenreName,
             country = trackForView.country,
             previewUrl = trackForView.previewUrl,
-            artworkUrl512 = trackForView.artworkUrl512
+            artworkUrl512 = trackForView.artworkUrl512,
+            isLiked = trackForView.isLiked
         )
     }
 }

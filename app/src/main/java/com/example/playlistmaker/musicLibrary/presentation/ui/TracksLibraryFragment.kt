@@ -1,7 +1,7 @@
 package com.example.playlistmaker.musicLibrary.presentation.ui
 
-import android.content.Intent
 import android.os.Bundle
+import android.provider.SyncStateContract.Constants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +11,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TracksLibraryFragmentBinding
-import com.example.playlistmaker.musicLibrary.presentation.adapter.SavedTrackClickListener
+import com.example.playlistmaker.musicLibrary.presentation.adapter.clickListener.SavedTrackClickListener
 import com.example.playlistmaker.musicLibrary.presentation.adapter.SavedTracksRecyclerAdapter
 import com.example.playlistmaker.musicLibrary.presentation.states.TracksLibraryState
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.TracksLibraryFragmentViewModel
-import com.example.playlistmaker.player.presentation.ui.AudioPlayerFragment
 import com.example.playlistmaker.search.presentation.model.TrackForView
+import com.example.playlistmaker.tools.Constans
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
@@ -55,8 +55,15 @@ class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
 
         viewModel.getStateLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
-                is TracksLibraryState.Content -> showContent(state.content)
-                TracksLibraryState.Empty -> showEmpty()
+                is TracksLibraryState.Content -> {
+                    releaseState(flag = true)
+                    adapter?.add(state.content)
+                }
+
+                TracksLibraryState.Empty -> {
+                    releaseState(flag = false)
+                    adapter?.clearList()
+                }
             }
         }
 
@@ -65,28 +72,19 @@ class TracksLibraryFragment : Fragment(), SavedTrackClickListener {
 
     override fun onResume() {
         super.onResume()
-
         viewModel.checkSavedTracks()
     }
 
-    private fun showEmpty() {
-        binding.emptyPlaylistsImage.isVisible = true
-        binding.emptyPlaylistsText.isVisible = true
-        binding.savedTracksRecycler.isVisible = false
-        adapter?.clearList()
-    }
-
-    private fun showContent(content: List<TrackForView>) {
-        binding.emptyPlaylistsImage.isVisible = false
-        binding.emptyPlaylistsText.isVisible = false
-        binding.savedTracksRecycler.isVisible = true
-        adapter?.add(content)
+    private fun releaseState(flag: Boolean) {
+        binding.emptyPlaylistsImage.isVisible = !flag
+        binding.emptyPlaylistsText.isVisible = !flag
+        binding.savedTracksRecycler.isVisible = flag
     }
 
     override fun clickOnTrack(track: TrackForView) {
-        viewModel.sendTrack(track)
-
-        findNavController().navigate(R.id.action_musicLibraryFragment_to_audioPlayerFragment)
+        val bundle = Bundle()
+        bundle.putLong(Constans.TRACK.value, track.trackId)
+        findNavController().navigate(R.id.action_musicLibraryFragment_to_audioPlayerFragment, bundle)
     }
 
     companion object {

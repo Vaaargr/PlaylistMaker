@@ -7,7 +7,7 @@ class TrackEntityMapper {
 
     fun entityToTrackMap(entity: TrackEntity): Track {
         return Track(
-            id = entity.id,
+            innerID = entity.innerID,
             trackName = entity.trackName,
             artistName = entity.artistName,
             trackTimeMillis = entity.trackTimeMillis,
@@ -18,13 +18,14 @@ class TrackEntityMapper {
             primaryGenreName = entity.primaryGenreName,
             country = entity.country,
             previewUrl = entity.previewUrl,
-            artworkUrl512 = make512Url(entity.artworkUrl100)
+            artworkUrl512 = make512Url(entity.artworkUrl100),
+            isLiked = entity.isLicked
         )
     }
 
     fun trackToEntityMap(track: Track): TrackEntity {
         return TrackEntity(
-            id = track.id,
+            innerID = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -35,6 +36,7 @@ class TrackEntityMapper {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
+            isLicked = track.isLiked
         )
     }
 

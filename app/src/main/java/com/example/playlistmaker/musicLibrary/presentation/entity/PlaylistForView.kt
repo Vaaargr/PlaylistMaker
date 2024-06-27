@@ -2,9 +2,8 @@ package com.example.playlistmaker.musicLibrary.presentation.entity
 
 data class PlaylistForView(
     var id: Long?,
-    val name: String,
+    var name: String,
     var description: String?,
-    val imagePath: String?,
-    var tracksIDList: List<Int>,
+    var imagePath: String?,
     var tracksCount: Int
 )

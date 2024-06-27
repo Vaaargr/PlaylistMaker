@@ -15,7 +15,6 @@ class PlaylistLibraryViewModel(
 ) : ViewModel() {
 
     private val stateLiveData = MutableLiveData<PlaylistLibraryState>(PlaylistLibraryState.Empty)
-
     fun observeState(): LiveData<PlaylistLibraryState> = stateLiveData
 
     private fun setState(state: PlaylistLibraryState) {

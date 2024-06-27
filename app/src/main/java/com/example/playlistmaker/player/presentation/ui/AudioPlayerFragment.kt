@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,9 +14,10 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.AudioPlayerFragmentBinding
 import com.example.playlistmaker.player.presentation.adapter.PlaylistsPlayerRecyclerAdapter
 import com.example.playlistmaker.player.presentation.states.SaveTrackInPlaylistState
-import com.example.playlistmaker.player.presentation.states.SavedTrackState
 import com.example.playlistmaker.tools.GlideClient
 import com.example.playlistmaker.player.presentation.viewModel.PlayerViewModel
+import com.example.playlistmaker.search.presentation.model.TrackForView
+import com.example.playlistmaker.tools.Constans
 import com.example.playlistmaker.tools.Formatter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,10 +26,10 @@ class AudioPlayerFragment : Fragment() {
     private var _binding: AudioPlayerFragmentBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<PlayerViewModel>()
-
     private val imageLoader = GlideClient()
-
     private var adapter: PlaylistsPlayerRecyclerAdapter? = null
+    private var trackFlag = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +48,20 @@ class AudioPlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val track = viewModel.getTrack()
+        val trackID = requireArguments().getLong(Constans.TRACK.value)
+        if (trackID > -1L) {
+            if (!trackFlag){
+                viewModel.loadTrack(trackID)
+                trackFlag = true
+            }
+        } else {
+            findNavController().navigateUp()
+        }
+
+        viewModel.observeTrack().observe(viewLifecycleOwner) {
+            displayTrack(it)
+        }
+
         val behavior = BottomSheetBehavior.from(binding.standardBottomSheet)
             .apply { state = BottomSheetBehavior.STATE_HIDDEN }
 
@@ -69,12 +84,6 @@ class AudioPlayerFragment : Fragment() {
             binding.timerText.text = Formatter.timeFormat(time)
         }
 
-        viewModel.getSavedTrackState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                SavedTrackState.SavedTrack -> binding.likeButton.setImageResource(R.drawable.saved_heart)
-                SavedTrackState.UnsavedTrack -> binding.likeButton.setImageResource(R.drawable.unsaved_heart)
-            }
-        }
 
         viewModel.observePlaylistState().observe(viewLifecycleOwner) { state ->
             adapter!!.add(state)
@@ -99,32 +108,12 @@ class AudioPlayerFragment : Fragment() {
 
         viewModel.checkPlaylists()
 
-        imageLoader.loadImage(
-            requireContext(),
-            track.artworkUrl512,
-            resources.getDimensionPixelSize(R.dimen.big_corner_radius),
-            binding.albumImage
-        )
-
-        with(binding) {
-            trackName.text = track.trackName
-            artistName.text = track.artistName
-            duration.text = track.trackTimeString
-            if (track.collectionName.isNullOrEmpty()) {
-                albumText.isVisible = false
-                album.isVisible = false
-            } else album.text = track.collectionName
-            year.text = track.releaseDate.subSequence(0, 4)
-            genre.text = track.primaryGenreName
-            country.text = track.country
-        }
-
         binding.playButton.setOnClickListener {
             viewModel.playStopButtonClick()
         }
 
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.likeButton.setOnClickListener {
@@ -136,7 +125,7 @@ class AudioPlayerFragment : Fragment() {
         }
 
         binding.newPlaylistButtonPlayer.setOnClickListener {
-            findNavController().navigate(R.id.action_audioPlayerFragment_to_newPlaylistFragment)
+            findNavController().navigate(R.id.action_audioPlayerFragment_to_editPlaylistFragment)
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -159,11 +148,48 @@ class AudioPlayerFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                /*binding.overlay.alpha = slideOffset*/
             }
 
         })
 
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.checkAndDeleteTrack()
+                    findNavController().navigateUp()
+                }
+            })
+
+    }
+
+    private fun displayTrack(track: TrackForView) {
+        imageLoader.loadImage(
+            requireContext(),
+            track.artworkUrl512,
+            resources.getDimensionPixelSize(R.dimen.big_corner_radius),
+            binding.albumImage
+        )
+        isLiked(track.isLiked)
+        with(binding) {
+            trackName.text = track.trackName
+            artistName.text = track.artistName
+            duration.text = track.trackTimeString
+            if (track.collectionName.isNullOrEmpty()) {
+                albumText.isVisible = false
+                album.isVisible = false
+            } else album.text = track.collectionName
+            year.text = track.releaseDate.subSequence(0, 4)
+            genre.text = track.primaryGenreName
+            country.text = track.country
+        }
+    }
+
+    private fun isLiked(isLiked: Boolean) {
+        when (isLiked) {
+            true -> binding.likeButton.setImageResource(R.drawable.saved_heart)
+            false -> binding.likeButton.setImageResource(R.drawable.unsaved_heart)
+        }
     }
 
     private fun changeButton(isPlayed: Boolean) {

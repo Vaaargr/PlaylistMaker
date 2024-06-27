@@ -20,6 +20,7 @@ import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.search.presentation.model.ResponseResult
 import com.example.playlistmaker.search.presentation.state.SearchActivityState
 import com.example.playlistmaker.search.presentation.viewModel.SearchingViewModel
+import com.example.playlistmaker.tools.Constans
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -246,10 +247,14 @@ class SearchFragment : Fragment(), TrackClickListener {
 
     override fun clickOnTrack(track: TrackForView) {
         if (clickDebounce()) {
-            viewModel.saveTrack(track)
-            viewModel.sendTrack(track)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.saveTrack(track)
+                viewModel.sendTrack(track)
 
-            findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment)
+                val bundle = Bundle()
+                bundle.putLong(Constans.TRACK.value, track.trackId)
+                findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment, bundle)
+            }
         }
     }
 

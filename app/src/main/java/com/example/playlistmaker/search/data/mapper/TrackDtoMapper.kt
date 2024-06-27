@@ -6,7 +6,7 @@ import com.example.playlistmaker.search.domain.entity.Track
 class TrackDtoMapper {
     fun trackDtoToTrackMap(trackDto: TrackDto): Track {
         return Track(
-            id = trackDto.id,
+            innerID = trackDto.innerID,
             trackName = trackDto.trackName,
             artistName = trackDto.artistName,
             trackTimeMillis = trackDto.trackTimeMillis,
@@ -17,13 +17,14 @@ class TrackDtoMapper {
             primaryGenreName = trackDto.primaryGenreName,
             country = trackDto.country,
             previewUrl = trackDto.previewUrl,
-            artworkUrl512 = make512Url(trackDto.artworkUrl100)
+            artworkUrl512 = make512Url(trackDto.artworkUrl100),
+            isLiked = trackDto.isLiked
         )
     }
 
     fun trackToTrackDtoMap(track: Track): TrackDto {
         return TrackDto(
-            id = track.id,
+            innerID = track.innerID,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = track.trackTimeMillis,
@@ -33,7 +34,8 @@ class TrackDtoMapper {
             releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
             country = track.country,
-            previewUrl = track.previewUrl
+            previewUrl = track.previewUrl,
+            isLiked = track.isLiked
         )
     }
 

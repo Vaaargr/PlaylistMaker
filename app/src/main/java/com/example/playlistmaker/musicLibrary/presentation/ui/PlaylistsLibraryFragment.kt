@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistsLibraryFragmentBinding
 import com.example.playlistmaker.musicLibrary.presentation.adapter.PlaylistsRecyclerAdapter
+import com.example.playlistmaker.musicLibrary.presentation.adapter.clickListener.PlaylistClickListener
+import com.example.playlistmaker.musicLibrary.presentation.entity.PlaylistForView
 import com.example.playlistmaker.musicLibrary.presentation.states.PlaylistLibraryState
-import com.example.playlistmaker.musicLibrary.presentation.viewModel.NewPlaylistFragmentViewModel
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.PlaylistLibraryViewModel
+import com.example.playlistmaker.tools.Constans
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-class PlaylistsLibraryFragment : Fragment() {
+class PlaylistsLibraryFragment : Fragment(), PlaylistClickListener {
 
     private var _binding: PlaylistsLibraryFragmentBinding? = null
     private val binding get() = _binding!!
@@ -43,20 +45,25 @@ class PlaylistsLibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_musicLibraryFragment_to_newPlaylistFragment)
+            findNavController().navigate(R.id.action_musicLibraryFragment_to_editPlaylistFragment)
         }
 
-        adapter = PlaylistsRecyclerAdapter(resources.getDimensionPixelOffset(R.dimen.big_corner_radius), requireContext())
+        adapter = PlaylistsRecyclerAdapter(
+            resources.getDimensionPixelOffset(R.dimen.big_corner_radius),
+            requireContext(),
+            this
+        )
 
         binding.playlistsRecycler.layoutManager = GridLayoutManager(context, 2)
         binding.playlistsRecycler.adapter = adapter
 
-        viewModel.observeState().observe(viewLifecycleOwner){ state ->
-            when(state){
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is PlaylistLibraryState.Content -> {
                     stateHandle(true)
                     adapter?.add(state.content)
                 }
+
                 PlaylistLibraryState.Empty -> stateHandle(false)
             }
         }
@@ -68,12 +75,17 @@ class PlaylistsLibraryFragment : Fragment() {
         viewModel.checkSavedPlaylists()
     }
 
-    private fun stateHandle(state: Boolean){
+    private fun stateHandle(state: Boolean) {
         binding.emptyPlaylistsImage.isVisible = !state
         binding.emptyPlaylistsText.isVisible = !state
         binding.playlistsRecycler.isVisible = state
     }
 
+    override fun clickOnPlaylist(playlist: PlaylistForView) {
+        val bundle = Bundle()
+        bundle.putLong(Constans.PLAYLIST.value, playlist.id!!)
+        findNavController().navigate(R.id.action_musicLibraryFragment_to_playlistFragment, bundle)
+    }
 
     companion object {
         fun newInstance(): PlaylistsLibraryFragment {

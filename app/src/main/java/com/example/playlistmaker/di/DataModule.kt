@@ -7,10 +7,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.musicLibrary.data.database.TrackDatabase
 import com.example.playlistmaker.musicLibrary.data.mapper.PlaylistsEntityMapper
 import com.example.playlistmaker.musicLibrary.data.mapper.TrackEntityMapper
-import com.example.playlistmaker.musicLibrary.data.mapper.TracksInPlaylistsEntityMapper
 import com.example.playlistmaker.player.data.clientIterfaces.PlayerClient
-import com.example.playlistmaker.player.data.clientIterfaces.ReceiveTrackLocalClient
-import com.example.playlistmaker.player.data.clients.ReceiveTrackShPrefsClient
 import com.example.playlistmaker.player.data.mediaPlayer.MediaPlayerClient
 import com.example.playlistmaker.search.data.clientInterfaces.NetworkClient
 import com.example.playlistmaker.search.data.clientInterfaces.SearchHistoryClient
@@ -90,14 +87,6 @@ val dataModule = module {
         )
     }
 
-    single<ReceiveTrackLocalClient> {
-        ReceiveTrackShPrefsClient(
-            get(),
-            androidContext().resources.getString(R.string.track_key),
-            get()
-        )
-    }
-
     factory<PlayerClient> {
         MediaPlayerClient(get())
     }
@@ -114,6 +103,4 @@ val dataModule = module {
     factory { ResponseMapper(get()) }
 
     factory { PlaylistsEntityMapper(get()) }
-
-    factory { TracksInPlaylistsEntityMapper() }
 }
