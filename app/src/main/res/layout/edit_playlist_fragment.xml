@@ -101,5 +101,6 @@
         android:background="@drawable/button_selector"
         android:enabled="false"
         style="@style/NewPlaylistButton"
+        android:textAllCaps="false"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -66,4 +66,6 @@
     <string name="delete_track">Delete track</string>
     <string name="delete_track_body">Are you sure you want to remove the track from the playlist?</string>
     <string name="delete">Delete</string>
+    <string name="no_tracks_added">No tracks have been added to this playlist yet</string>
+    <string name="nothing_to_share">This playlist has no tracks to share</string>
 </resources>

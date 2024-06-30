@@ -8,5 +8,6 @@ data class PlaylistTrackEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long?,
     val playlistID: Long,
-    val trackID: Long
+    val trackID: Long,
+    val position: Int
 )

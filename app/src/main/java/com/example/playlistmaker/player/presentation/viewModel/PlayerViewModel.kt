@@ -189,7 +189,8 @@ class PlayerViewModel(
             ) {
                 setSaveTrackInPlaylistState(SaveTrackInPlaylistState.Failure(playlist.name))
             } else {
-                playerPlaylistTrackInteractor.addTrackToPlaylist(playlist.id!!, getTrack().trackId)
+                val position = playerPlaylistTrackInteractor.getTrackPosition(playlistID = playlist.id!!)
+                playerPlaylistTrackInteractor.addTrackToPlaylist(playlist.id!!, getTrack().trackId, position + 1)
                 playlist.tracksCount += 1
                 playlistLibraryInteractor.updatePlaylist(
                     playlistForViewMapper.playlistForViewToPlaylistMap(

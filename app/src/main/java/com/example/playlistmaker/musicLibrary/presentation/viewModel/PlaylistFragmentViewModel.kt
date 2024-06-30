@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.musicLibrary.domain.api.interactors.PlaylistInteractor
 import com.example.playlistmaker.musicLibrary.presentation.entity.PlaylistForView
 import com.example.playlistmaker.musicLibrary.presentation.mapper.PlaylistForViewMapper
+import com.example.playlistmaker.musicLibrary.presentation.states.TracksInPlaylistState
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import kotlinx.coroutines.launch
@@ -20,18 +21,18 @@ class PlaylistFragmentViewModel(
 
     private val playlistLiveData = MutableLiveData<PlaylistForView>()
 
-    private val tracksInPlaylistLiveData = MutableLiveData<List<TrackForView>>()
+    private val tracksInPlaylistLiveData = MutableLiveData<TracksInPlaylistState>()
 
     fun observePlaylistLD(): LiveData<PlaylistForView> = playlistLiveData
 
-    fun observeTracksInPlaylistLD(): LiveData<List<TrackForView>> = tracksInPlaylistLiveData
+    fun observeTracksInPlaylistLD(): LiveData<TracksInPlaylistState> = tracksInPlaylistLiveData
 
     private fun setPlaylist(playlist: PlaylistForView) {
         playlistLiveData.postValue(playlist)
     }
 
-    private fun setTracksInPlaylist(tracks: List<TrackForView>) {
-        tracksInPlaylistLiveData.value = tracks
+    private fun setTracksInPlaylist(tracksState: TracksInPlaylistState) {
+        tracksInPlaylistLiveData.value = tracksState
     }
 
     fun getPlaylist(id: Long) {
@@ -46,6 +47,20 @@ class PlaylistFragmentViewModel(
 
     fun deletePlaylist() {
         viewModelScope.launch {
+            val state = tracksInPlaylistLiveData.value
+            when (state) {
+                is TracksInPlaylistState.Content -> {
+                    state.tracks.forEach {
+                        interactor.deleteTrackFromPlaylist(
+                            playlistID = getPlaylistId(),
+                            trackID = it.trackId,
+
+                        )
+                    }
+                }
+
+                else -> {}
+            }
             interactor.deletePlaylist(getPlaylistId())
         }
     }
@@ -53,7 +68,15 @@ class PlaylistFragmentViewModel(
     fun checkTracksInPlaylist(playlistID: Long) {
         viewModelScope.launch {
             val answer = interactor.getAllTracksInPlaylist(playlistID = playlistID)
-            setTracksInPlaylist(answer.map { trackMapper.trackToTrackForViewMap(it) })
+            if (answer.isEmpty()) {
+                setTracksInPlaylist(TracksInPlaylistState.Empty)
+            } else {
+                setTracksInPlaylist(TracksInPlaylistState.Content(answer.map {
+                    trackMapper.trackToTrackForViewMap(
+                        it
+                    )
+                }))
+            }
         }
     }
 
@@ -71,11 +94,11 @@ class PlaylistFragmentViewModel(
         }
     }
 
-    fun takePlaylist(): PlaylistForView{
+    fun takePlaylist(): PlaylistForView {
         return playlistLiveData.value!!
     }
 
-    fun takeTracksList(): List<TrackForView>{
+    fun takeTracksList(): TracksInPlaylistState {
         return tracksInPlaylistLiveData.value!!
     }
 }

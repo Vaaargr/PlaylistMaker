@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,7 @@ import com.example.playlistmaker.databinding.PlaylistFragmentBinding
 import com.example.playlistmaker.musicLibrary.presentation.adapter.TracksInPlaylistAdapter
 import com.example.playlistmaker.musicLibrary.presentation.adapter.clickListener.OnTrackInPlaylistClickListener
 import com.example.playlistmaker.musicLibrary.presentation.entity.PlaylistForView
+import com.example.playlistmaker.musicLibrary.presentation.states.TracksInPlaylistState
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.PlaylistFragmentViewModel
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.PlaylistLibraryViewModel
 import com.example.playlistmaker.search.presentation.model.TrackForView
@@ -52,10 +55,7 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val playlistID = requireArguments().getLong(Constans.PLAYLIST.value)
-        if (playlistID > -1) {
-            viewModel.getPlaylist(playlistID)
-        }
+
 
         trackAdapter = TracksInPlaylistAdapter(
             this,
@@ -64,39 +64,54 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
         binding.tracksInPlaylistRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.tracksInPlaylistRecycler.adapter = trackAdapter
 
+        val addMenuBehavior = BottomSheetBehavior.from(binding.addMenuBottomSheet)
+            .apply { state = BottomSheetBehavior.STATE_HIDDEN }
+
         val shareButtonClickListener = OnClickListener {
+            val state = viewModel.takeTracksList()
+            when (state) {
+                is TracksInPlaylistState.Content -> {
+                    val tracksList = state.tracks
+                    val playlist = viewModel.takePlaylist()
+                    addMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-            val playlist = viewModel.takePlaylist()
-            if (playlist.tracksCount > 0) {
-                val tracksList = viewModel.takeTracksList()
 
-                var message = "${playlist.name}\n${playlist.description}\n${playlist.tracksCount} ${
-                    definePlural(playlist.tracksCount)
-                }"
+                    var message =
+                        "${playlist.name}\n${playlist.description}\n${playlist.tracksCount} ${
+                            definePlural(playlist.tracksCount)
+                        }"
 
-                tracksList.forEachIndexed { index, trackForView ->
-                    message += "\n${index + 1}. ${trackForView.artistName} - ${trackForView.trackName}(${
-                        SimpleDateFormat(
-                            "mm.ss",
-                            Locale.getDefault()
-                        ).format(trackForView.trackTimeMillis)
-                    })"
+                    tracksList.forEachIndexed { index, trackForView ->
+                        message += "\n${index + 1}. ${trackForView.artistName} - ${trackForView.trackName} (${
+                            SimpleDateFormat(
+                                "mm.ss",
+                                Locale.getDefault()
+                            ).format(trackForView.trackTimeMillis)
+                        })"
+                    }
+
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "text/plain"
+                    intent.putExtra(Intent.EXTRA_TEXT, message)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    requireContext().startActivity(intent)
                 }
 
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, message)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK
-                requireContext().startActivity(intent)
-
+                TracksInPlaylistState.Empty -> {
+                    addMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.nothing_to_share),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 
         binding.addMenuShareButton.setOnClickListener(shareButtonClickListener)
         binding.playlistShare.setOnClickListener(shareButtonClickListener)
 
-        val addMenuBehavior = BottomSheetBehavior.from(binding.addMenuBottomSheet)
-            .apply { state = BottomSheetBehavior.STATE_HIDDEN }
+
 
         addMenuBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -118,15 +133,23 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
-        viewModel.observeTracksInPlaylistLD().observe(viewLifecycleOwner) { tracks ->
-            trackAdapter!!.add(tracks)
+        viewModel.observeTracksInPlaylistLD().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is TracksInPlaylistState.Content -> {
+                    showTracks(true)
+                    trackAdapter!!.add(state.tracks)
 
-            var duration = 0L
-            tracks.forEach { duration += it.trackTimeMillis }
-            val start = SimpleDateFormat("mm", Locale.getDefault()).format(duration)
-            val end = getDuration(duration)
-            val result = "$start $end"
-            binding.tracksTime.text = result
+                    var duration = 0L
+                    state.tracks.forEach { duration += it.trackTimeMillis }
+                    val start = SimpleDateFormat("mm", Locale.getDefault()).format(duration)
+                    val end = getDuration(duration)
+                    val result = "$start $end"
+                    binding.tracksTime.text = result
+                }
+
+                TracksInPlaylistState.Empty -> showTracks(false)
+            }
+
         }
 
         viewModel.observePlaylistLD().observe(viewLifecycleOwner) { playlist ->
@@ -138,9 +161,17 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
             }
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigateUp()
+                }
+
+            })
 
         binding.playlistBackButton.setOnClickListener {
-            findNavController().navigateUp()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.addMenuButton.setOnClickListener {
@@ -174,6 +205,14 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val playlistID = requireArguments().getLong(Constans.PLAYLIST.value)
+        if (playlistID > -1) {
+            viewModel.getPlaylist(playlistID)
+        }
+    }
+
     private fun displayPlaylist(playlist: PlaylistForView) {
         imageLoader.loadImage(
             requireContext(),
@@ -196,6 +235,12 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
 
         binding.addMenuPlaylistName.text = playlist.name
         binding.addMenuTracksCount.text = countText
+    }
+
+    private fun showTracks(flag: Boolean) {
+        binding.tracksInPlaylistRecycler.isVisible = flag
+        binding.playlistEmptyPlaylistsText.isVisible = !flag
+        binding.playlistEmptyTracksImage.isVisible = !flag
     }
 
     private fun addMenuOpen(flag: Boolean) {

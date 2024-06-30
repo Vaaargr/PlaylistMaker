@@ -148,6 +148,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_24"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/playlist_empty_tracks_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/empty_search"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_16"/>
+
+        <TextView
+            android:id="@+id/playlist_empty_playlists_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/no_tracks_added"
+            android:gravity="center"
+            style="@style/PlaylistAddMenuPlaylistName"
             />
 
     </LinearLayout>

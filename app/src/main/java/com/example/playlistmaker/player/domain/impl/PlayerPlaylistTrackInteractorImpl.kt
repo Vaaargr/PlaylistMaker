@@ -12,7 +12,11 @@ class PlayerPlaylistTrackInteractorImpl(private val playerPlaylistTrackRepositor
         return playerPlaylistTrackRepository.checkTrackInPlaylist(playlistID = playlistID, trackID = trackID)
     }
 
-    override suspend fun addTrackToPlaylist(playlistID: Long, trackID: Long) {
-        playerPlaylistTrackRepository.addTrackToPlaylist(playlistID = playlistID, trackID = trackID)
+    override suspend fun addTrackToPlaylist(playlistID: Long, trackID: Long, trackPosition: Int) {
+        playerPlaylistTrackRepository.addTrackToPlaylist(playlistID = playlistID, trackID = trackID, trackPosition = trackPosition)
+    }
+
+    override suspend fun getTrackPosition(playlistID: Long): Int{
+        return playerPlaylistTrackRepository.getTrackPosition(playlistID = playlistID)
     }
 }

@@ -112,6 +112,7 @@ class EditPlaylistFragmentViewModel(
                 val playlist =
                     mapper.playlistToPlaylistForView(editPlaylistInteractor.loadPlaylist(id))
                 setEditState(EditPlaylistState.Edit(playlist))
+                setName(playlist.name)
             }
         }
     }

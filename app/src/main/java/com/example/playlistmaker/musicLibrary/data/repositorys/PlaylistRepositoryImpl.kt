@@ -33,10 +33,16 @@ class PlaylistRepositoryImpl(
     override suspend fun deleteTrackFromPlaylist(playlistID: Long, trackID: Long) {
         database.getPlaylistTrackDao()
             .deleteTrackFromPlaylist(playlistID = playlistID, trackID = trackID)
+
+        if (database.getPlaylistTrackDao().checkTrackInAllPlaylists(trackID).isEmpty()) {
+            deleteTrack(trackID = trackID)
+        }
     }
 
     override suspend fun deleteTrack(trackID: Long) {
-        database.getTracksDao().deleteTrack(trackID = trackID)
+        if (!database.getTracksDao().findTrack(trackID = trackID).isLicked) {
+            database.getTracksDao().deleteTrack(trackID = trackID)
+        }
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {

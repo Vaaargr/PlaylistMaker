@@ -11,6 +11,7 @@ import android.os.Environment
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,18 +92,21 @@ class EditPlaylistFragment : Fragment() {
 
                     imageLoader.loadImage(
                         requireContext(),
-                        playlist!!.imagePath,
+                        state.playlist.imagePath,
                         resources.getDimensionPixelOffset(R.dimen.small_corner_radius),
                         binding.playlistImage
                     )
-                    binding.playlistName.setText(playlist!!.name)
-                    binding.playlistDescription.setText(playlist!!.description ?: "")
+                    binding.playlistName.setText(state.playlist.name)
+                    binding.playlistDescription.setText(state.playlist.description ?: "")
 
                     binding.editPlaylistHeader.text = getString(R.string.edit)
                     binding.createPlaylist.text = getString(R.string.save)
                 }
 
-                EditPlaylistState.New -> {}
+                EditPlaylistState.New -> {
+                    binding.playlistName.setText("")
+                    binding.playlistDescription.setText("")
+                }
             }
         }
 
@@ -230,6 +234,7 @@ class EditPlaylistFragment : Fragment() {
                                 .show()
                         }
                     } else {
+                        viewModel.clearDate()
                         findNavController().navigateUp()
                     }
                 }
@@ -252,7 +257,9 @@ class EditPlaylistFragment : Fragment() {
                 filePath.mkdirs()
             }
 
-            val file = File(filePath, "${name}.jpg")
+            val file = File(filePath, "${uri.lastPathSegment}.jpg")
+
+
             val inputStream =
                 requireContext().applicationContext.contentResolver.openInputStream(uri)
             val outputStream = FileOutputStream(file)

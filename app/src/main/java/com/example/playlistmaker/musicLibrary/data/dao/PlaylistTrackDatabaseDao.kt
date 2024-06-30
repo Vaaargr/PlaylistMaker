@@ -22,6 +22,12 @@ interface PlaylistTrackDatabaseDao {
     @Query("SELECT COUNT(playlistID) FROM playlist_track WHERE playlistID = :playlistID AND trackID = :trackID")
     suspend fun checkTrackInPlaylist(playlistID: Long, trackID: Long): Int
 
-    @Query("SELECT * FROM saved_track_table INNER JOIN playlist_track ON saved_track_table.trackId = playlist_track.trackID WHERE playlist_track.playlistID = :playlistID")
+    @Query("SELECT playlistID FROM playlist_track WHERE trackID = :trackID")
+    suspend fun checkTrackInAllPlaylists(trackID: Long): List<Long>
+
+    @Query("SELECT * FROM saved_track_table INNER JOIN playlist_track ON saved_track_table.trackId = playlist_track.trackID WHERE playlist_track.playlistID = :playlistID ORDER BY playlist_track.position DESC")
     suspend fun getAllTracksInPlaylist(playlistID: Long): List<TrackEntity>
+
+    @Query("SELECT MAX(position) FROM playlist_track WHERE playlistID = :playlistID")
+    suspend fun getMaxPosition(playlistID: Long): Int?
 }

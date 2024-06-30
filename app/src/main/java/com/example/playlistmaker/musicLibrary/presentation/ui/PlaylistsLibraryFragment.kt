@@ -45,7 +45,9 @@ class PlaylistsLibraryFragment : Fragment(), PlaylistClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_musicLibraryFragment_to_editPlaylistFragment)
+            val bundle = Bundle()
+            bundle.putLong(Constans.PLAYLIST.value, -1L)
+            findNavController().navigate(R.id.action_musicLibraryFragment_to_editPlaylistFragment, bundle)
         }
 
         adapter = PlaylistsRecyclerAdapter(
@@ -71,7 +73,6 @@ class PlaylistsLibraryFragment : Fragment(), PlaylistClickListener {
 
     override fun onResume() {
         super.onResume()
-
         viewModel.checkSavedPlaylists()
     }
 

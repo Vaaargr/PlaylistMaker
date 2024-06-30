@@ -10,7 +10,7 @@ import com.example.playlistmaker.musicLibrary.data.entity.PlaylistTrackEntity
 import com.example.playlistmaker.musicLibrary.data.entity.TrackEntity
 
 @Database(
-    version = 7,
+    version = 8,
     entities = [TrackEntity::class, PlaylistEntity::class, PlaylistTrackEntity::class]
 )
 abstract class TrackDatabase : RoomDatabase() {
