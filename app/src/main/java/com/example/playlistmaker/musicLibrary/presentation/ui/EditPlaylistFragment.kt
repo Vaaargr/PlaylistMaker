@@ -106,6 +106,9 @@ class EditPlaylistFragment : Fragment() {
                 EditPlaylistState.New -> {
                     binding.playlistName.setText("")
                     binding.playlistDescription.setText("")
+
+                    binding.editPlaylistHeader.text = getString(R.string.new_playlist)
+                    binding.createPlaylist.text = getString(R.string.create)
                 }
             }
         }
