@@ -47,6 +47,7 @@ class PlaylistFragmentViewModel(
 
     fun deletePlaylist() {
         viewModelScope.launch {
+            interactor.deletePlaylist(getPlaylistId())
             when (val state = tracksInPlaylistLiveData.value) {
                 is TracksInPlaylistState.Content -> {
                     state.tracks.forEach {
@@ -58,7 +59,7 @@ class PlaylistFragmentViewModel(
                 }
                 else -> {}
             }
-            interactor.deletePlaylist(getPlaylistId())
+
         }
     }
 

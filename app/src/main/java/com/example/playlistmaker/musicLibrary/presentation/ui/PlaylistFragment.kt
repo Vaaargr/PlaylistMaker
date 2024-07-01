@@ -28,6 +28,7 @@ import com.example.playlistmaker.tools.Constans
 import com.example.playlistmaker.tools.GlideClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
@@ -59,8 +60,6 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         trackAdapter = TracksInPlaylistAdapter(
             this,
@@ -207,7 +206,7 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
                 .setPositiveButton(R.string.yes) { _, _ ->
                     lifecycleScope.launch {
                         viewModel.deletePlaylist()
-                        delay(300)
+
                         findNavController().navigateUp()
                     }
                 }
