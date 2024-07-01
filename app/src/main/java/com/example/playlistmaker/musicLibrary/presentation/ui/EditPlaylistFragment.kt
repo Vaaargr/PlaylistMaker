@@ -210,6 +210,7 @@ class EditPlaylistFragment : Fragment() {
                     toast.show()
                 }
 
+                clearText()
                 viewModel.clearDate()
                 findNavController().navigateUp()
             }
@@ -227,6 +228,7 @@ class EditPlaylistFragment : Fragment() {
                                 .setTitle(R.string.new_playlist_finish)
                                 .setMessage(R.string.new_playlist_warning)
                                 .setPositiveButton(R.string.complete) { _, _ ->
+                                    clearText()
                                     viewModel.clearDate()
                                     findNavController().navigateUp()
                                 }
@@ -234,6 +236,7 @@ class EditPlaylistFragment : Fragment() {
                                 .show()
                         }
                     } else {
+                        clearText()
                         viewModel.clearDate()
                         findNavController().navigateUp()
                     }
@@ -272,5 +275,10 @@ class EditPlaylistFragment : Fragment() {
         } else {
             return null
         }
+    }
+
+    fun clearText(){
+        binding.playlistName.setText("")
+        binding.playlistDescription.setText("")
     }
 }

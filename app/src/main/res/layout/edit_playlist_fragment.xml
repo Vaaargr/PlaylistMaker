@@ -62,7 +62,8 @@
             android:id="@+id/playlist_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/name" />
+            android:hint="@string/name"
+            android:singleLine="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

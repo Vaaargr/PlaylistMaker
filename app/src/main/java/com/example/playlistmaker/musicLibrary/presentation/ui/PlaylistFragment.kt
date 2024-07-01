@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.App
@@ -27,6 +28,10 @@ import com.example.playlistmaker.tools.Constans
 import com.example.playlistmaker.tools.GlideClient
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -74,7 +79,6 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
                     val tracksList = state.tracks
                     val playlist = viewModel.takePlaylist()
                     addMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
 
                     var message =
                         "${playlist.name}\n${playlist.description}\n${playlist.tracksCount} ${
@@ -147,7 +151,11 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
                     binding.tracksTime.text = result
                 }
 
-                TracksInPlaylistState.Empty -> showTracks(false)
+                TracksInPlaylistState.Empty -> {
+                    showTracks(false)
+                    val text = "0 ${getString(R.string.minutes_match)}"
+                    binding.tracksTime.text = text
+                }
             }
 
         }
@@ -193,12 +201,15 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
 
         binding.addMenuDeleteButton.setOnClickListener {
             addMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogButtons)
                 .setTitle(R.string.delete_playlist)
                 .setMessage(R.string.want_to_delete_a_playlist)
                 .setPositiveButton(R.string.yes) { _, _ ->
-                    viewModel.deletePlaylist()
-                    findNavController().navigateUp()
+                    lifecycleScope.launch {
+                        viewModel.deletePlaylist()
+                        delay(300)
+                        findNavController().navigateUp()
+                    }
                 }
                 .setNegativeButton(R.string.no) { _, _ -> }
                 .show()
@@ -255,11 +266,13 @@ class PlaylistFragment : Fragment(), OnTrackInPlaylistClickListener {
     }
 
     override fun onLongClick(track: TrackForView) {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogButtons)
             .setTitle(R.string.delete_track)
             .setMessage(R.string.delete_track_body)
+
             .setPositiveButton(R.string.delete) { _, _ ->
                 viewModel.deleteTrack(trackID = track.trackId, trackIsLiked = track.isLiked)
+                viewModel.checkTracksInPlaylist(requireArguments().getLong(Constans.PLAYLIST.value))
             }
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .show()
