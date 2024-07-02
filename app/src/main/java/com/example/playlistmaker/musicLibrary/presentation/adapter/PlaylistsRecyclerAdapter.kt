@@ -6,11 +6,16 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.musicLibrary.presentation.adapter.clickListener.PlaylistClickListener
 import com.example.playlistmaker.musicLibrary.presentation.adapter.viewHolder.PlaylistViewHolder
 import com.example.playlistmaker.musicLibrary.presentation.entity.PlaylistForView
 import java.util.ArrayList
 
-class PlaylistsRecyclerAdapter(private val roundingRadius: Int, private val context: Context) :
+class PlaylistsRecyclerAdapter(
+    private val roundingRadius: Int,
+    private val context: Context,
+    private val listener: PlaylistClickListener
+) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
     private val playlists = ArrayList<PlaylistForView>()
 
@@ -30,7 +35,8 @@ class PlaylistsRecyclerAdapter(private val roundingRadius: Int, private val cont
         holder.bind(
             playlists[position],
             definePlural(playlists[position].tracksCount),
-            roundingRadius
+            roundingRadius,
+            listener
         )
     }
 

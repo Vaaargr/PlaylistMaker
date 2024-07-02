@@ -3,7 +3,7 @@ package com.example.playlistmaker.musicLibrary.presentation.adapter.viewHolder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackViewBinding
-import com.example.playlistmaker.musicLibrary.presentation.adapter.SavedTrackClickListener
+import com.example.playlistmaker.musicLibrary.presentation.adapter.clickListener.SavedTrackClickListener
 import com.example.playlistmaker.search.presentation.model.TrackForView
 import com.example.playlistmaker.tools.Formatter
 import com.example.playlistmaker.tools.GlideClient

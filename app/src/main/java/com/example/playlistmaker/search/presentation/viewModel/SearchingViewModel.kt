@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.search.domain.api.interactors.SaveTrackUseCase
 import com.example.playlistmaker.search.domain.api.interactors.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.interactors.SearchTrackUseCase
-import com.example.playlistmaker.search.domain.api.interactors.SendTrackUseCase
 import com.example.playlistmaker.search.presentation.mappers.SearchResponseMapper
 import com.example.playlistmaker.search.presentation.mappers.TrackViewMapper
 import com.example.playlistmaker.search.presentation.model.ResponseResult
@@ -17,7 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchingViewModel(
-    private val sendTrackUseCase: SendTrackUseCase,
+    private val saveTrackUseCase: SaveTrackUseCase,
     private val searchTrackUseCase: SearchTrackUseCase,
     private val searchHistory: SearchHistoryInteractor,
     private val trackViewMapper: TrackViewMapper,
@@ -41,9 +41,9 @@ class SearchingViewModel(
 
     fun getRequest(): String? = requestLiveData.value
 
-    fun observeShowProgressBarLD() : LiveData<Boolean> = showProgressBarLiveData
+    fun observeShowProgressBarLD(): LiveData<Boolean> = showProgressBarLiveData
 
-    private fun setShowProgressBarLD(input: Boolean){
+    private fun setShowProgressBarLD(input: Boolean) {
         showProgressBarLiveData.postValue(input)
     }
 
@@ -68,7 +68,7 @@ class SearchingViewModel(
         setRequest("")
     }
 
-    fun cancelSearch(){
+    fun cancelSearch() {
         searchJob?.cancel()
     }
 
@@ -112,7 +112,7 @@ class SearchingViewModel(
         )
     }
 
-    fun sendTrack(track: TrackForView) {
-        sendTrackUseCase.execute(trackViewMapper.trackForViewToTrackMap(track))
+    suspend fun sendTrack(track: TrackForView) {
+        saveTrackUseCase.saveTrack(trackViewMapper.trackForViewToTrackMap(track))
     }
 }

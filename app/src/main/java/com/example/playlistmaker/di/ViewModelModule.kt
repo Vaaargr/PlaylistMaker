@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.musicLibrary.presentation.viewModel.NewPlaylistFragmentViewModel
+import com.example.playlistmaker.musicLibrary.presentation.viewModel.EditPlaylistFragmentViewModel
+import com.example.playlistmaker.musicLibrary.presentation.viewModel.PlaylistFragmentViewModel
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.PlaylistLibraryViewModel
 import com.example.playlistmaker.musicLibrary.presentation.viewModel.TracksLibraryFragmentViewModel
 import com.example.playlistmaker.player.presentation.viewModel.PlayerViewModel
@@ -19,18 +20,22 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PlayerViewModel(get(), get(), get(), get(), get(), get(), get())
+        PlayerViewModel(get(), get(), get(), get(), get(), get())
     }
 
     viewModel {
-        TracksLibraryFragmentViewModel(get(), get(), get())
+        TracksLibraryFragmentViewModel(get(), get())
     }
 
     viewModel {
-        NewPlaylistFragmentViewModel(get(), get())
+        EditPlaylistFragmentViewModel(get(), get())
     }
 
     viewModel {
         PlaylistLibraryViewModel(get(), get())
+    }
+
+    viewModel {
+        PlaylistFragmentViewModel(get(), get(), get())
     }
 }

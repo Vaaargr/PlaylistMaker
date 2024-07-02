@@ -1,27 +1,29 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.musicLibrary.data.repositorys.ForPlayerDatabaseRepositoryImpl
 import com.example.playlistmaker.musicLibrary.data.repositorys.PlaylistLibraryRepositoryImpl
-import com.example.playlistmaker.musicLibrary.data.repositorys.SavePlaylistRepositoryImpl
-import com.example.playlistmaker.musicLibrary.data.repositorys.SaveTrackInPlaylistRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.PlaylistRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.EditPlaylistRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.PlayerPlaylistTrackRepositoryImpl
+import com.example.playlistmaker.musicLibrary.data.repositorys.PlayerTrackRepositoryImpl
 import com.example.playlistmaker.musicLibrary.data.repositorys.TrackLibraryRepositoryImpl
-import com.example.playlistmaker.musicLibrary.domain.api.repositorys.ForPlayerDatabaseRepository
 import com.example.playlistmaker.musicLibrary.domain.api.repositorys.PlaylistLibraryRepository
-import com.example.playlistmaker.musicLibrary.domain.api.repositorys.SavePlaylistRepository
-import com.example.playlistmaker.musicLibrary.domain.api.repositorys.SaveTrackInPlaylistRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.PlaylistRepository
+import com.example.playlistmaker.musicLibrary.domain.api.repositorys.EditPlaylistRepository
 import com.example.playlistmaker.musicLibrary.domain.api.repositorys.TracksLibraryRepository
 import com.example.playlistmaker.player.data.repositorys.PlayerRepositoryImpl
-import com.example.playlistmaker.player.data.repositorys.ReceiveTrackUseCaseRepositoryImpl
+import com.example.playlistmaker.player.domain.api.repositorys.PlayerPlaylistTrackRepository
 import com.example.playlistmaker.player.domain.api.repositorys.PlayerRepository
-import com.example.playlistmaker.player.domain.api.repositorys.ReceiveTrackUseCaseRepository
+import com.example.playlistmaker.player.domain.api.repositorys.PlayerTrackRepository
 import com.example.playlistmaker.search.data.repositorys.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repositorys.SearchTrackRepositoryImpl
-import com.example.playlistmaker.search.data.repositorys.SendTrackRepositoryImpl
+import com.example.playlistmaker.search.data.repositorys.SaveTrackRepositoryImpl
 import com.example.playlistmaker.search.domain.api.repositorys.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.api.repositorys.SearchTrackRepository
-import com.example.playlistmaker.search.domain.api.repositorys.SendTrackRepository
+import com.example.playlistmaker.search.domain.api.repositorys.SaveTrackRepository
 import com.example.playlistmaker.settings.data.repository.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
+import com.example.playlistmaker.sharing.data.clients.ExternalNavigatorClientImpl
+import com.example.playlistmaker.sharing.data.clientsInterfaces.ExternalNavigatorClient
 import com.example.playlistmaker.sharing.data.repository.ExternalNavigatorImpl
 import com.example.playlistmaker.sharing.data.repository.GetInformationRepositoryImpl
 import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
@@ -49,35 +51,35 @@ val repositoryModule = module {
         SearchTrackRepositoryImpl(get(), get())
     }
 
-    single<SendTrackRepository> {
-        SendTrackRepositoryImpl(get(), get())
+    single<SaveTrackRepository> {
+        SaveTrackRepositoryImpl(get(), get())
     }
 
     factory<PlayerRepository> {
         PlayerRepositoryImpl(get())
     }
 
-    factory<ReceiveTrackUseCaseRepository> {
-        ReceiveTrackUseCaseRepositoryImpl(get(), get())
-    }
-
-    single<ForPlayerDatabaseRepository> {
-        ForPlayerDatabaseRepositoryImpl(get(), get())
+    factory<PlayerTrackRepository> {
+        PlayerTrackRepositoryImpl(get(), get())
     }
 
     single<TracksLibraryRepository> {
         TrackLibraryRepositoryImpl(get(), get())
     }
 
-    single<SavePlaylistRepository> {
-        SavePlaylistRepositoryImpl(get(), get())
+    single<EditPlaylistRepository> {
+        EditPlaylistRepositoryImpl(get(), get())
     }
 
     single<PlaylistLibraryRepository>{
         PlaylistLibraryRepositoryImpl(get(), get())
     }
 
-    single<SaveTrackInPlaylistRepository> {
-        SaveTrackInPlaylistRepositoryImpl(get(), get())
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get(), get())
+    }
+
+    single<PlayerPlaylistTrackRepository> {
+        PlayerPlaylistTrackRepositoryImpl(get())
     }
 }

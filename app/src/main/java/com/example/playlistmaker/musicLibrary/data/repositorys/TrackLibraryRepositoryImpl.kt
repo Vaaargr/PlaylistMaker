@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class TrackLibraryRepositoryImpl(private val database: TrackDatabase, private val mapper: TrackEntityMapper): TracksLibraryRepository {
-    override  fun getSavedTracks(): Flow<List<Track>> = flow {
-        val tracks = database.getTracksDao().getAllSavedTracks()
+    override  fun getLikedTracks(): Flow<List<Track>> = flow {
+        val tracks = database.getTracksDao().getAllLikedTracks()
         emit(listEntityToListTrack(tracks))
     }
 

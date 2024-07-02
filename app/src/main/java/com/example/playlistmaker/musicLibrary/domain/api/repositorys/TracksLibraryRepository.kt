@@ -4,5 +4,5 @@ import com.example.playlistmaker.search.domain.entity.Track
 import kotlinx.coroutines.flow.Flow
 
 interface TracksLibraryRepository {
-    fun getSavedTracks(): Flow<List<Track>>
+    fun getLikedTracks(): Flow<List<Track>>
 }

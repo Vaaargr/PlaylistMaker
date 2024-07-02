@@ -53,4 +53,19 @@
     <string name="add_to_playlist">Add to playlist</string>
     <string name="track_already_added">The track has already been added to the playlist</string>
     <string name="added_to_playlist">Added to playlist</string>
+    <string name="share">Share</string>
+    <string name="edit_information">Edit information</string>
+    <string name="delete_playlist">Delete playlist</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="want_to_delete_a_playlist">Want to delete a playlist?</string>
+    <string name="minute_match">minute</string>
+    <string name="minutes_match">minutes</string>
+    <string name="minutes_unmatch">minutes</string>
+    <string name="minutes_unmatch_a">minutes</string>
+    <string name="delete_track">Delete track</string>
+    <string name="delete_track_body">Are you sure you want to remove the track from the playlist?</string>
+    <string name="delete">Delete</string>
+    <string name="no_tracks_added">No tracks have been added to this playlist yet</string>
+    <string name="nothing_to_share">This playlist has no tracks to share</string>
 </resources>

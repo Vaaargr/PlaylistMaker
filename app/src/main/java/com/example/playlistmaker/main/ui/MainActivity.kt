@@ -22,9 +22,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.frag_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        navController.addOnDestinationChangedListener{_, destination,_ ->
-            when(destination.id){
-                R.id.newPlaylistFragment, R.id.audioPlayerFragment-> binding.bottomNavView.isVisible = false
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.editPlaylistFragment, R.id.audioPlayerFragment, R.id.playlistFragment -> binding.bottomNavView.isVisible =
+                    false
+
                 else -> binding.bottomNavView.isVisible = true
             }
         }
