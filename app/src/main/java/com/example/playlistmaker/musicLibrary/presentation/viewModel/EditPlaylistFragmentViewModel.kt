@@ -82,6 +82,7 @@ class EditPlaylistFragmentViewModel(
         setName("")
         setDescription(null)
         setImage(null)
+        setEditState(EditPlaylistState.New)
     }
 
     fun prepareAndSavePlaylist(image: String?) {
